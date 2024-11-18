@@ -18,3 +18,49 @@ module "peering" {
   vnet_ids                  = reverse(module.vnet.vnet_ids)
   resource_group_name       = var.resource_group_name
 }
+
+
+module "nsg" {
+  replicas            = 2
+  source              = "./modules/nsg"
+  subnet_names        = var.subnet_names
+  location            = var.location
+  resource_group_name = var.resource_group_name
+
+}
+
+module "subnet" {
+  source               = "./modules/subnet"
+  replicas             = 2
+  subnet_names         = var.subnet_names
+  vnet_names           = module.vnet.vnet_names        
+  resource_group_name  = var.resource_group_name
+
+  # network_security_group_ids = module.nsg.nsg_ids
+}
+
+module "vm_nic" {
+  source              = "./modules/pic"
+  vm_config           = var.vm_config
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  subnet_id           = module.subnet.subnet_ids[0]
+}
+
+
+module "vm" {
+  source              = "./modules/vm"
+  vm_config           = var.vm_config
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  network_interface_ids = module.vm_nic.vm_nic_ids
+}
+
+
+module "aks_cluster" {
+  source              = "./modules/aks"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  node_count          = 2
+}
+
