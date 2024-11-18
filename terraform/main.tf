@@ -1,7 +1,9 @@
+
 provider "azurerm" {
   features {}
   subscription_id = var.subscription_id
 }
+
 
 module "vnet" {
   source              = "./modules/vnet"
@@ -62,5 +64,6 @@ module "aks_cluster" {
   location            = var.location
   resource_group_name = var.resource_group_name
   node_count          = 2
+  subnet_id           = module.subnet.subnet_ids[1]
 }
 
