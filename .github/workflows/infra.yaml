@@ -7,7 +7,7 @@ on:
   # push:
   #   branches:
   #     - main
-  working-dispatch:
+  workflow_dispatch:
 permissions:
   pull-requests: write
   contents: read
