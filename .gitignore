@@ -1,0 +1,38 @@
+# Ignorar archivos y carpetas de Terraform
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl
+
+# Ignorar archivos .env
+.env
+.env.*
+
+# Ignorar los directorios de salida de compilación y contenedores (por ejemplo, imágenes de Docker)
+**/target/
+**/build/
+**/dist/
+
+# Ignorar archivos de logs
+*.log
+
+# Ignorar archivos temporales de editores
+*~
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Ignorar configuraciones locales de IDEs
+.vscode/
+.idea/
+
+# Ignorar dependencias de Node.js si las hubiera (si es que usas Terraform en proyectos con frontend)
+node_modules/
+
+# Otros archivos que podrías querer ignorar
+.DS_Store
+Thumbs.db
