@@ -1,7 +1,14 @@
+terraform {
+  backend "azurerm" {
+    resource_group_name   = "rg-jrocha-dvfinlab"   
+    storage_account_name  = "stajrochadvfinlab"        
+    container_name        = "tfstatecont"                     
+    key                   = "terraform.tfstate"           
+  }
+}
 
 provider "azurerm" {
   features {}
-  subscription_id = var.subscription_id
 }
 
 
@@ -74,5 +81,11 @@ module "aks_cluster" {
   resource_group_name = var.resource_group_name
   node_count          = 2
   subnet_id           = module.subnet.subnet_ids[1]
+}
+
+module "acr" {
+  source              = "./modules/acr"
+  location            = var.location                 
+  resource_group_name = var.resource_group_name      
 }
 

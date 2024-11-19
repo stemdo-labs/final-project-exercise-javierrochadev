@@ -11,17 +11,24 @@ variable "location" {
 }
 
 
-variable "subscription_id" {
-  description = "El nombre de la localizacion de los recursos de Azure"
-  type        = string
-  default     = "86f76907-b9d5-46fa-a39d-aff8432a1868"
-}
-
 variable "subnet_names" {
   description = "Los nombres de las dubredes de Azure"
   type        = list(string)
   default     = ["virtual_machines", "app"]
 }
+
+variable "storage_account_name" {
+  description = "Los nombres de las dubredes de Azure"
+  type        = string
+  default     = "stoageaccount"
+}
+
+variable "container_name" {
+  description = "Los nombres de las dubredes de Azure"
+  type        = string
+  default     = "tfstate"
+}
+
 
 
 variable "vm_config" {
@@ -40,7 +47,7 @@ variable "vm_config" {
  default = {
   0 = {
     name           = "vm-bd"
-    vm_size        = "Standard_DS1_v2"
+    vm_size        = "Standard_B1ms"
     admin_username = "adminuser1"
     admin_password = "P@ssw0rd1234!"
     subnet_name    = "subnet1"
@@ -51,7 +58,7 @@ variable "vm_config" {
   },
   1 = {
     name           = "vm-backup"
-    vm_size        = "Standard_DS2_v2"
+    vm_size        = "Standard_B1ms"
     admin_username = "adminuser2"
     admin_password = "P@ssw0rd5678!"
     subnet_name    = "subnet2"
@@ -63,4 +70,3 @@ variable "vm_config" {
 }
 
 }
-
