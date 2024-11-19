@@ -49,9 +49,18 @@ module "vm_nic" {
   subnet_id           = module.subnet.subnet_ids[0]
 }
 
+module "disk" {
+  source               = "./modules/disc"
+  replicas             = 2
+  location             = var.location
+  resource_group_name  = var.resource_group_name
+}
+
+
 
 module "vm" {
   source              = "./modules/vm"
+  disk_ids       = module.disk.disk_ids 
   vm_config           = var.vm_config
   location            = var.location
   resource_group_name = var.resource_group_name

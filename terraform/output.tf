@@ -18,3 +18,7 @@ output "vm_nic_ids" {
 output "subnet_ids" {
   value = module.subnet.subnet_ids
 }
+
+output "disk_ids" {
+  value = module.disk.disk_ids
+}

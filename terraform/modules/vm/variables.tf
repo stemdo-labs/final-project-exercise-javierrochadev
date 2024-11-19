@@ -29,6 +29,10 @@ variable "network_interface_ids" {
 
 }
 
+variable "disk_ids"{
+  type = list(string)
+}
+
 
 
 
