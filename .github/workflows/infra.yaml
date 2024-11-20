@@ -53,7 +53,7 @@ jobs:
       - name: Terraform Init
         if: ${{ github.event.inputs.action == 'init' || github.event.inputs.action == 'plan' || github.event.inputs.action == 'apply' || github.event.inputs.action == 'destroy' }}
         run: terraform init
-        working-directory: ./iac/Terraform
+        working-directory: ./terraform
  
       - name: Terraform Plan
         if: ${{ github.event.inputs.action == 'plan' }}
@@ -63,7 +63,7 @@ jobs:
       - name: Terraform Apply
         if: ${{ github.event.inputs.action == 'apply' }}
         run: terraform apply -auto-approve
-        working-directory: ./iac/Terraform
+        working-directory: ./terraform
  
       
       # - name: Set AKS Credentials
@@ -76,9 +76,9 @@ jobs:
       - name: Terraform Destroy
         if: ${{ github.event.inputs.action == 'destroy' }}
         run: terraform destroy -auto-approve
-        working-directory: ./iac/Terraform
+        working-directory: ./terraform
  
       - name: Terraform State List
         if: ${{ github.event.inputs.action == 'destroy' }}
         run: terraform state list
-        working-directory: ./iac/Terraform
+        working-directory: ./terraform
