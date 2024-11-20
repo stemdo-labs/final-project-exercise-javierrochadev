@@ -10,7 +10,7 @@ permissions:
 jobs:
   ansible:
     name: Ansible Workflow
-    runs-on: self-host
+    runs-on: self-hosted
  
     env:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
