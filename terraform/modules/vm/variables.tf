@@ -1,5 +1,7 @@
 variable "vm_config" {
   type = map(object({
+    public_ip          = bool
+    private_ip         = string
     name               = string         # Tamaño de la máquina virtual, por ejemplo, "Standard_DS1_v2"
     vm_size            = string         # Tamaño de la máquina virtual, por ejemplo, "Standard_DS1_v2"
     admin_username     = string         # Nombre de usuario administrador

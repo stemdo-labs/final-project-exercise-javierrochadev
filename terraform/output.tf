@@ -22,3 +22,7 @@ output "subnet_ids" {
 # output "disk_ids" {
 #   value = module.disk.disk_ids
 # }
+
+output "id" {
+  value = module.public_ip.id
+}

@@ -33,6 +33,8 @@ variable "container_name" {
 
 variable "vm_config" {
   type = map(object({
+    public_ip          = bool
+    private_ip         = string
     name               = string         # Tamaño de la máquina virtual, por ejemplo, "Standard_DS1_v2"
     vm_size            = string         # Tamaño de la máquina virtual, por ejemplo, "Standard_DS1_v2"
     admin_username     = string         # Nombre de usuario administrador
@@ -46,6 +48,8 @@ variable "vm_config" {
 
  default = {
   0 = {
+    public_ip      = false
+    private_ip     = "10.0.1.4"
     name           = "vm-bd"
     vm_size        = "Standard_B1ms"
     admin_username = "adminuser1"
@@ -57,6 +61,8 @@ variable "vm_config" {
     os_version     = "latest"
   },
   1 = {
+    public_ip      = true
+    private_ip     = "10.0.1.5"
     name           = "vm-backup"
     vm_size        = "Standard_B1ms"
     admin_username = "adminuser2"
