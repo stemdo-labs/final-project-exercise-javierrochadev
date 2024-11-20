@@ -28,6 +28,12 @@ jobs:
           sudo apt update -y
           sudo apt install ansible -y
           sudo apt install sshpass -y
+          
+      - name: execute playbook on bd vm
+        run: |
+          ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i "${{ secrets.PRIVATE_BD_IP }}," up.yaml -u ${{ secrets.VM_BD_USER }} --ask-pass
+
+       
 
       
      
