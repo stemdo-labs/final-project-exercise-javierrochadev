@@ -24,16 +24,10 @@ jobs:
         uses: actions/checkout@v3
 
       # 2. Instalar Terraform
-      - name: Install Terraform
-        run: |
-          echo "Installing Terraform..."
-          sudo apt-get update
-          sudo apt-get install -y wget unzip
-          TERRAFORM_VERSION=1.5.5
-          wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-          unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-          sudo mv terraform /usr/local/bin/
-          terraform --version
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.5
 
       # 3. Terraform Init
       - name: Terraform Init
