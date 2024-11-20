@@ -1,3 +1,9 @@
+variable "AZURE_CLIENT_ID" {}
+variable "AZURE_CLIENT_SECRET" {}
+variable "AZURE_TENANT_ID" {}
+variable "AZURE_SUBSCRIPTION_ID" {}
+
+
 variable "resource_group_name" {
   description = "El nombre del grupo de recursos de Azure"
   type        = string
@@ -57,7 +63,7 @@ variable "vm_config" {
     subnet_name    = "subnet1"
     os_publisher   = "Canonical"
     os_offer       = "UbuntuServer"
-    os_sku         = "18.04-LTS"      # Ubuntu 18.04 LTS Desktop
+    os_sku         = "22.04-LTS"      # Ubuntu 18.04 LTS Desktop
     os_version     = "latest"
   },
   1 = {
@@ -70,7 +76,7 @@ variable "vm_config" {
     subnet_name    = "subnet2"
     os_publisher   = "Canonical"
     os_offer       = "UbuntuServer"
-    os_sku         = "18.04-LTS"      # Ubuntu 18.04 LTS Desktop
+    os_sku         = "22.04-LTS"      # Ubuntu 18.04 LTS Desktop
     os_version     = "latest"
   }
 }
