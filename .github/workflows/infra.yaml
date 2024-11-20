@@ -1,27 +1,24 @@
 name: Setup Terraform and Azure CLI
 
 on:
-  # pull_request:
-  #   branches:
-  #     - main
-  # push:
-  #   branches:
-  #     - main
   workflow_dispatch:
+    # Puedes descomentar `pull_request` o `push` según tus necesidades
+    # pull_request:
+    #   branches:
+    #     - main
+    # push:
+    #   branches:
+    #     - main
+
 permissions:
   pull-requests: write
   contents: read
-  
 
 jobs:
-  setup:
-    runs-on: runner-stemdo-labs
+  terraform:
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
       # 1. Checkout del código del repositorio
       - name: Checkout code
         uses: actions/checkout@v3
@@ -32,47 +29,45 @@ jobs:
           echo "Installing Terraform..."
           sudo apt-get update
           sudo apt-get install -y wget unzip
-          # Definir la versión de Terraform
-          TERRAFORM_VERSION=1.5.5 # Puedes cambiar esta versión a la que necesites
+          TERRAFORM_VERSION=1.5.5
           wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
           unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
           sudo mv terraform /usr/local/bin/
           terraform --version
 
+      # 3. Terraform Init
       - name: Terraform Init
-        id: terraform_init
         run: |
           terraform init
-        working-directory: ./terrafrom/
+        working-directory: ./terraform/
 
+      # 4. Terraform Plan
       - name: Terraform Plan
         id: terraform_plan
         run: terraform plan -out=tfplan
-        working-directory: ../terrafrom/
+        working-directory: ./terraform/
         env:
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-      
+
+      # 5. Set PR Body (opcional)
       - name: Set PR body
+        if: ${{ github.event_name == 'pull_request' }}
         uses: actions/github-script@v6
         with:
           script: |
-            if (context.payload.pull_request) {
-              const planOutput = `\`\`\`\n${{ steps.terraform_plan.outputs.stdout }}\n\`\`\``;
-              github.rest.issues.createComment({
-                issue_number: context.payload.pull_request.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: `### Terraform Plan Result:\n${planOutput}`
-              });
-            }
-        
+            const planOutput = `\`\`\`\n${{ steps.terraform_plan.outputs.stdout || 'No output available' }}\n\`\`\``;
+            github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `### Terraform Plan Result:\n${planOutput}`
+            });
 
-        
+      # 6. Terraform Apply
       - name: Terraform Apply
-        id: terraform_apply
         run: terraform apply -auto-approve
         working-directory: ./soluciones/modules
         env:
@@ -80,16 +75,15 @@ jobs:
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        if: github.event_name == 'push' && steps.terraform_plan.outcome == 'success'
-        continue-on-error: true  # Esto permite que continúe si hay un fallo
-        
-      - name: Ir a ver infra en Azure
-        id: show_infra
-        run: |
-          sleep 20
-        
+        if: ${{ github.event_name == 'push' }}
+
+      # 7. Ir a ver infraestructura en Azure
+      #- name: Wait for infrastructure to stabilize
+      # run: sleep 20
+
+      # 8. (Opcional) Terraform Destroy
+      # Descomentar si deseas destruir la infraestructura después
       # - name: Terraform Destroy
-      #   id: terraform_destroy
       #   run: terraform destroy -auto-approve
       #   working-directory: ./soluciones/modules
       #   env:
@@ -97,4 +91,4 @@ jobs:
       #     ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
       #     ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       #     ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-      #   if: steps.terraform_apply.conclusion != null
+      #   if: ${{ steps.terraform_apply.conclusion != 'success' }}
