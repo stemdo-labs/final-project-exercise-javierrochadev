@@ -22,5 +22,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
- 
+        
+      - name: Install Ansible and sshpass
+        run: |
+          sudo apt update -y
+          sudo apt install ansible -y
+          sudo apt install sshpass -y
+
+      
      
