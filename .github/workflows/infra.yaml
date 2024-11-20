@@ -1,109 +1,84 @@
-name: Setup Terraform and Azure CLI
-
+name: Terraform
+ 
 on:
   workflow_dispatch:
-    # Puedes descomentar `pull_request` o `push` según tus necesidades
-    # pull_request:
-    #   branches:
-    #     - main
-    # push:
-    #   branches:
-    #     - main
-
+    inputs:
+      action:
+        description: "Select the Terraform action to execute"
+        required: true
+        default: "plan"
+        type: choice
+        options:
+          - init
+          - plan
+          - apply
+          - destroy
+ 
 permissions:
   pull-requests: write
   contents: read
-
+ 
 jobs:
   terraform:
+    name: Terraform Workflow
     runs-on: ubuntu-latest
+ 
     env:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-
+ 
     steps:
-      # 1. Checkout del código del repositorio
       - name: Checkout code
         uses: actions/checkout@v3
-        
-      # 2. Instalacion de azure cli
-      
+ 
       - name: Install Azure CLI
         run: |
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-
-      # 3. login 
-
-      - name: Azure Login
+ 
+      - name: Login to Azure with Service Principal
         run: |
-          echo "Logging in to Azure..."
           az login --service-principal \
-            --username ${{ secrets.ARM_CLIENT_ID }} \
-            --password ${{ secrets.ARM_CLIENT_SECRET }} \
-            --tenant ${{ secrets.ARM_TENANT_ID }}
-
-      # 2. Instalar Terraform
+            -u ${{ secrets.AZURE_CLIENT_ID }} \
+            -p ${{ secrets.AZURE_CLIENT_SECRET }} \
+            --tenant ${{ secrets.AZURE_TENANT_ID }}
+ 
+ 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.5.5
-
-      # 3. Terraform Init
+ 
       - name: Terraform Init
-        run: |
-          terraform init
-        working-directory: ./terraform/
-
-      # 4. Terraform Plan
+        if: ${{ github.event.inputs.action == 'init' || github.event.inputs.action == 'plan' || github.event.inputs.action == 'apply' || github.event.inputs.action == 'destroy' }}
+        run: terraform init
+        working-directory: ./iac/Terraform
+ 
       - name: Terraform Plan
-        id: terraform_plan
-        run: terraform plan -out=tfplan
-        working-directory: ./terraform/
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-
-      # 5. Set PR Body (opcional)
-      - name: Set PR body
-        if: ${{ github.event_name == 'pull_request' }}
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const planOutput = `\`\`\`\n${{ steps.terraform_plan.outputs.stdout || 'No output available' }}\n\`\`\``;
-            github.rest.issues.createComment({
-              issue_number: context.payload.pull_request.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `### Terraform Plan Result:\n${planOutput}`
-            });
-
-      # 6. Terraform Apply
+        if: ${{ github.event.inputs.action == 'plan' }}
+        run: terraform plan
+        working-directory: ./iac/Terraform
+ 
       - name: Terraform Apply
+        if: ${{ github.event.inputs.action == 'apply' }}
         run: terraform apply -auto-approve
-        working-directory: ./soluciones/modules
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        if: ${{ github.event_name == 'push' }}
-
-      # 7. Ir a ver infraestructura en Azure
-      #- name: Wait for infrastructure to stabilize
-      # run: sleep 20
-
-      # 8. (Opcional) Terraform Destroy
-      # Descomentar si deseas destruir la infraestructura después
-      # - name: Terraform Destroy
-      #   run: terraform destroy -auto-approve
-      #   working-directory: ./soluciones/modules
-      #   env:
-      #     ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-      #     ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-      #     ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      #     ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-      #   if: ${{ steps.terraform_apply.conclusion != 'success' }}
+        working-directory: ./iac/Terraform
+ 
+      
+      # - name: Set AKS Credentials
+      #   if: ${{ github.event.inputs.action == 'apply' }}
+      #   run: |
+      #     az aks get-credentials \
+      #       --resource-group rg-cntenorio-dvfinlab\
+      #       --name aks_cluster
+ 
+      - name: Terraform Destroy
+        if: ${{ github.event.inputs.action == 'destroy' }}
+        run: terraform destroy -auto-approve
+        working-directory: ./iac/Terraform
+ 
+      - name: Terraform State List
+        if: ${{ github.event.inputs.action == 'destroy' }}
+        run: terraform state list
+        working-directory: ./iac/Terraform
