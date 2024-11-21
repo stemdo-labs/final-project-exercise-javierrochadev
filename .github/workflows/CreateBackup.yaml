@@ -31,39 +31,20 @@ jobs:
       STORAGE_ACCOUNT_NAME: ${{ secrets.STORAGE_ACCOUNT_NAME }}
 
     steps:
-      - name: Instalacion de azure.azcollection
-        run: |
-          ansible-galaxy collection install azure.azcollection
-        working-directory: ./ansible
-
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
-      - name: Create and activate virtual environment
-        run: |
-          python -m venv ansible_env
-          source ansible_env/bin/activate
-      - name: Instalar Python 2.7 y pip3
-        run: |
-          sudo apt update
-
-          python3 -m pip install --upgrade pip
-          
-          pip3 --version
-      - name: Instalacion de dependendias de python
-        run: |
-          pip3 install -r ~/.ansible/collections/ansible_collections/azure/azcollection/requirements.txt
-        working-directory: ./ansible
-      - name: Actualizacion de azure.collection
-        run: |
-          ansible-galaxy collection install azure.azcollection --force
-        working-directory: ./ansible
       - name: Execute Database Backup playbook
         run: |
           ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini db_backup.yaml
         working-directory: ./ansible
-      - name: Deactivate virtual environment
+      - name: Instalacion de azcli
         run: |
-          deactivate
+          sudo install snap azcli
+      - name: Se crea un blob en azure
+        run: |
+          az storage container create --name $CONTAINER_BACKUP_NAME --account-name $STORAGE_ACCOUNT_NAME
+      - name: Realizar copia a azure
+        run: |
+           azcopy copy /.backups/backup.sql.gz.enc https://$STORAGE_ACCOUNT_NAME.blob.core.windows.net/$CONTAINER_BACKUP_NAME/backup.sql.gz.enc
+        working-directory: ./ansible
+        
+
         
