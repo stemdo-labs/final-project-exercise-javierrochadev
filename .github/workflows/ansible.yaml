@@ -28,7 +28,10 @@ jobs:
           sudo apt update -y
           sudo apt install ansible -y
           sudo apt install sshpass -y
-          
+
+      - name: Install Ansible role
+        run: |
+          ansible-galaxy role install geerlingguy.postgresql
       - name: Create inventory.ini file
         run: |
           echo "[database_server]" > inventory.ini
