@@ -8,10 +8,6 @@ terraform {
 }
 
 provider "azurerm" {
-  client_id       = var.AZURE_CLIENT_ID       # ID del Service Principal
-  client_secret   = var.AZURE_CLIENT_SECRET   # Secreto del Service Principal
-  tenant_id       = var.AZURE_TENANT_ID       # Tenant ID
-  subscription_id = var.AZURE_SUBSCRIPTION_ID # Subscription ID
 
   features {}
 }
@@ -76,10 +72,9 @@ module "disk" {
 }
 
 
-
 module "vm" {
   source              = "./modules/vm"
-  disk_ids       = module.disk.disk_ids 
+  disk_ids            = module.disk.disk_ids 
   vm_config           = var.vm_config
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -99,5 +94,10 @@ module "acr" {
   source              = "./modules/acr"
   location            = var.location                 
   resource_group_name = var.resource_group_name      
+}
+
+module "blob_storage"{
+  source               = "./modules/blob"
+  storage_account_name = var.storage_account_name
 }
 
