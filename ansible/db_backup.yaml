@@ -8,22 +8,30 @@
     db_password: "{{ lookup('env', 'DB_PASSWORD') }}"
     backup_dir: "{{ lookup('env', 'BACKUP_DIR') }}"
     backup_filename: "{{ db_name }}_{{ ansible_date_time.iso8601 }}.sql"
-  
   tasks:
-    - name: Crear el directorio de backup si no existe
+ 
+    - name: Crear directorio para backups
       file:
-        path: "{{ backup_dir }}"
+        path: "/var/backups/postgresql"
         state: directory
+        owner: postgres
+        group: postgres
         mode: '0755'
-        owner: adminuser1
-        group: adminuser1
-      become: yes
-    
-    - name: Realizar backup de la base de datos PostgreSQL
+ 
+    - name: Realizar el backup de la base de datos
       shell: >
-        pg_dump -h 10.0.1.4 -U {{ db_user }} {{ db_name }}
-        > {{ backup_dir }}/{{ backup_filename }}
-      become: no
-      environment:
-        PGUSER: db_user
-        PGPASSWORD: db_password
+        pg_dump -U {{ db_user }} -h 10.0.1.4 {{ db_name }} > /var/backups/postgresql/{{ db_name }}_{{ ansible_date_time.date }}.sql
+      become_user: postgres
+ 
+    - name: Confirmar que el archivo de backup se creó
+      stat:
+        path: "/var/backups/postgresql/{{ db_name }}_{{ ansible_date_time.date }}.sql"
+      register: backup_status
+ 
+    - name: Mostrar resultado del backup
+      debug:
+        msg: >
+          El backup se ha creado correctamente en
+          /var/backups/postgresql/{{ db_name }}_{{ ansible_date_time.date }}.sql
+      when: backup_status.stat.exists
+ 
