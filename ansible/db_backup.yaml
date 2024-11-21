@@ -10,17 +10,9 @@
     backup_filename: "{{ db_name }}_{{ ansible_date_time.iso8601 }}.sql"
   tasks:
  
-    - name: Crear directorio para backups
-      file:
-        path: "/var/backups/postgresql"
-        state: directory
-        owner: adminuser1
-        group: adminuser1
-        mode: '0755'
- 
     - name: Realizar el backup de la base de datos
       shell: >
-        pg_dump -U postgres {{ db_name }} -h 10.0.1.4  > /var/backups/postgresql/{{ db_name }}_{{ ansible_date_time.date }}.sql
+        pg_dump -U {{ db_user}} {{ db_name }} -h 10.0.1.4  > /tmp/{{ db_name }}_{{ ansible_date_time.date }}.sql
       become_user: postgres
  
     - name: Confirmar que el archivo de backup se creó
