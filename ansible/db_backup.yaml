@@ -71,7 +71,7 @@
       container_name: "{{ CONTAINER_BACKUP_NAME }}"
       blob_name: "backup_{{ ansible_date_time.date }}.sql.gz.enc"
       src: "{{ backup_file }}"
-      blob_type: "Block"
+      blob_type: "block"
       client_id: "{{ azure_client_id }}"
       secret: "{{ azure_client_secret }}"
       subscription_id: "{{ azure_subscription_id }}"
