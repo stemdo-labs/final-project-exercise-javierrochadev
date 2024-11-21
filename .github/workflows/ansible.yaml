@@ -28,16 +28,16 @@ jobs:
           sudo apt update -y
           sudo apt install ansible -y
           sudo apt install sshpass -y
-
-      - name: Install PostgreSQL role
+          
+      - name: Create inventory.ini file
         run: |
-          ansible-galaxy role install geerlingguy.postgresql
+          echo "[database_server]" > inventory.ini
+          echo "10.0.1.4 ansible_user=${{ secrets.VM_BD_USER }} ansible_password=${{ secrets.VM_BD_PASS }}" >> inventory.ini
+        working-directory: ./ansible
       - name: Execute playbook
         run: |
-          ansible-galaxy role install geerlingguy.postgresql
-          
-
-       
+          ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini up.yaml
+        working-directory: ./ansible
 
       
      
