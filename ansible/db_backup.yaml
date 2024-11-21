@@ -20,9 +20,8 @@
       shell: >
         PGPASSWORD={{ db_password }} pg_dump -U {{ db_user }} {{ db_name }} > {{ backup_dir }}/{{ backup_filename }}
       environment:
-      PGPASSWORD: "{{ db_password }}"
-
-
+        PGPASSWORD: "{{ db_password }}"
+    
     - name: Comprimir el archivo de respaldo
       command: gzip "{{ backup_dir }}/{{ backup_filename }}"
       args:
