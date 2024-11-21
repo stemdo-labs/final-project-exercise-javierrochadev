@@ -8,6 +8,11 @@ terraform {
 }
 
 provider "azurerm" {
+  client_id       = var.AZURE_CLIENT_ID       # ID del Service Principal
+  client_secret   = var.AZURE_CLIENT_SECRET   # Secreto del Service Principal
+  tenant_id       = var.AZURE_TENANT_ID       # Tenant ID
+  subscription_id = var.AZURE_SUBSCRIPTION_ID # Subscription ID
+
   features {}
 }
 
