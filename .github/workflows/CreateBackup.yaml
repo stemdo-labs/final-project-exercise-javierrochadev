@@ -36,9 +36,16 @@ jobs:
         run: |
           ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini db_backup.yaml
         working-directory: ./ansible
-      - name: Instalacion de azcli
+      - name: Install Azure CLI
         run: |
-          sudo install snap azcli
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+ 
+      - name: Login to Azure with Service Principal
+        run: |
+          az login --service-principal \
+            -u ${{ secrets.ARM_CLIENT_ID }} \
+            -p ${{ secrets.ARM_CLIENT_SECRET }} \
+            --tenant ${{ secrets.ARM_TENANT_ID }}
       - name: Realizar copia a azure
         run: |
            azcopy copy /.backups/backup.sql.gz.enc https://$STORAGE_ACCOUNT_NAME.blob.core.windows.net/$CONTAINER_BACKUP_NAME/backup.sql.gz.enc?$TOKEN_SAS
