@@ -32,6 +32,9 @@ jobs:
       - name: Install PostgreSQL role
         run: |
           ansible-galaxy role install geerlingguy.postgresql
+      - name: Execute playbook
+        run: |
+          ansible-galaxy role install geerlingguy.postgresql
           
 
        
