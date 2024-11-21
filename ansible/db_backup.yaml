@@ -1,4 +1,5 @@
-- name: Backup
+
+  - name: Backup
   hosts: database_server
   become: true
   vars:
