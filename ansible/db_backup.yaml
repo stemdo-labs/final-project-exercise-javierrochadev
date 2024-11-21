@@ -1,5 +1,5 @@
 - name: Backup
-  hosts: bd
+  hosts: database_server
   become: true
   vars:
     postgres_user: "postgres"
