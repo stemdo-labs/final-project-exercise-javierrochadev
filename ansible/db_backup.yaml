@@ -14,8 +14,8 @@
       file:
         path: "/var/backups/postgresql"
         state: directory
-        owner: postgres
-        group: postgres
+        owner: adminuser1
+        group: adminuser1
         mode: '0755'
  
     - name: Realizar el backup de la base de datos
