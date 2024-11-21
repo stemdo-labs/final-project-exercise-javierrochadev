@@ -47,10 +47,7 @@ jobs:
         run: |
           ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini up.yaml
         working-directory: ./ansible
-      - name: Execute Database Backup playbook
-        run: |
-          ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini db_backup.yaml
-        working-directory: ./ansible
+     
 
       
      
