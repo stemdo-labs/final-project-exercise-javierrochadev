@@ -1,0 +1,32 @@
+name: Ansible
+ 
+on:
+  workflow_dispatch:
+
+permissions:
+  pull-requests: write
+  contents: read
+ 
+jobs:
+  ansible:
+    name: Ansible Workflow
+    runs-on: self-hosted
+ 
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      PUBLIC_IP: ${{ vars.PUBLIC_IP }}
+      
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      BACKUP_DIR: ${{ vars.BACKUP_DIR }}
+
+    steps:
+      - name: Execute Database Backup playbook
+        run: |
+          ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini db_backup.yaml
+        working-directory: ./ansible
+        
