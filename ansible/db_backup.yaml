@@ -17,16 +17,14 @@
  
     - name: Confirmar que el archivo de backup se creó
       stat:
-        path: "/var/backups/postgresql/{{ db_name }}_{{ ansible_date_time.date }}.sql"
+        path: "/tmp/{{ db_name }}_{{ ansible_date_time.date }}.sql"
       register: backup_status
  
     - name: Mostrar resultado del backup
       debug:
         msg: >
           El backup se ha creado correctamente en
-          /var/backups/postgresql/{{ db_name }}_{{ ansible_date_time.date }}.sql
+          /tmp/{{ db_name }}_{{ ansible_date_time.date }}.sql
       when: backup_status.stat.exists
- 
 
-      when: backup_status.stat.exists
  
