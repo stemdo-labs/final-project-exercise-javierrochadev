@@ -1,0 +1,28 @@
+---
+- name: Backup de base de datos PostgreSQL
+  hosts: database_server
+  become: yes
+  vars:
+    db_name: "{{ lookup('env', 'DB_NAME') }}"
+    db_user: "{{ lookup('env', 'DB_USER') }}"
+    db_password: "{{ lookup('env', 'DB_PASSWORD') }}"
+    backup_dir: "{{ lookup('env', 'BACKUP_DIR') }}"
+    backup_filename: "{{ db_name }}_{{ ansible_date_time.iso8601 }}.sql"
+  
+  tasks:
+    - name: Crear el directorio de backup si no existe
+      file:
+        path: "{{ backup_dir }}"
+        state: directory
+        mode: '0755'
+    
+    - name: Realizar backup de la base de datos PostgreSQL
+      command: >
+        PGPASSWORD={{ db_password }} pg_dump -U {{ db_user }} {{ db_name }} > {{ backup_dir }}/{{ backup_filename }}
+      environment:
+        PGPASSWORD: "{{ db_password }}"
+
+    - name: Comprimir el archivo de respaldo
+      command: gzip "{{ backup_dir }}/{{ backup_filename }}"
+      args:
+        removes: "{{ backup_dir }}/{{ backup_filename }}"
