@@ -1,3 +1,5 @@
+
+
 name: Backup
  
 on:
@@ -32,6 +34,14 @@ jobs:
       - name: Instalacion de azure.azcollection
         run: |
           ansible-galaxy collection install azure.azcollection
+        working-directory: ./ansible
+      - name: Instalacion de dependendias de python
+        run: |
+          pip3 install -r ~/.ansible/collections/ansible_collections/azure/azcollection/requirements.txt
+        working-directory: ./ansible
+      - name: Actualizacion de azure.collection
+        run: |
+          ansible-galaxy collection install azure.azcollection --force
         working-directory: ./ansible
       - name: Execute Database Backup playbook
         run: |
