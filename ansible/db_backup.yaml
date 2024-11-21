@@ -21,7 +21,7 @@
     
     - name: Realizar backup de la base de datos PostgreSQL
       shell: >
-        pg_dump -h 127.0.0.1 -U myuser {{ db_name }}
+        pg_dump -h 10.0.1.4 -U myuser {{ db_name }}
         > {{ backup_dir }}/{{ backup_filename }}
       become: no
       environment:
