@@ -21,6 +21,13 @@
       environment:
         PGPASSWORD: "mypassword"
       register: backup_result
+
+    - name: Establecer permisos de lectura para el archivo de backup
+      file:
+        path: "{{ backup_file }}"
+        owner: "adminuser2"
+        group: "adminuser2"
+        mode: '0644'
  
     - name: Verificar si el dump y cifrado fue exitoso
       debug:
