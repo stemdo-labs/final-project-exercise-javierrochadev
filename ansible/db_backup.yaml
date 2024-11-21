@@ -15,8 +15,8 @@
         path: "{{ backup_dir }}"
         state: directory
         mode: '0755'
-        owner: adminuser2
-        group: adminuser2
+        owner: adminuser1
+        group: adminuser1
       become: yes
     
     - name: Realizar backup de la base de datos PostgreSQL
