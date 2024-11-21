@@ -57,14 +57,14 @@
 
     - name: Subir archivo al contenedor de Azure
       azure.azcollection.azure_rm_storageblob:
-        resource_group: {{ RESOURCE_GROUP_NAME }}
-        storage_account_name: {{ STORAGE_ACCOUNT_NAME }}
-        container_name: {{ CONTAINER_BACKUP_NAME }}
-        blob_name: backup_{{ ansible_date_time.date }}.sql.gz.enc
-        file_path: {{ backup_file }}
+        resource_group: "{{ RESOURCE_GROUP_NAME }}"
+        storage_account_name: "{{ STORAGE_ACCOUNT_NAME }}"
+        container_name: "{{ CONTAINER_BACKUP_NAME }}"
+        blob_name: "backup_{{ ansible_date_time.date }}.sql.gz.enc"
+        file_path: "{{ backup_file }}"
         blob_type: "Block"
-        client_id: {{ azure_client_id }}
-        secret: {{ azure_client_secret }}
-        subscription_id: {{ azure_subscription_id }}
-        tenant: {{ azure_tenant_id }}
+        client_id: "{{ azure_client_id }}"
+        secret: "{{ azure_client_secret }}"
+        subscription_id: "{{ azure_subscription_id }}"
+        tenant: "{{ azure_tenant_id }}"
       register: result_blob
