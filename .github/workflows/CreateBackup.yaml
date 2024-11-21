@@ -24,6 +24,10 @@ jobs:
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       BACKUP_DIR: ${{ vars.BACKUP_DIR }}
 
+      CONTAINER_BACKUP_NAME: ${{ secrets.CONTAINER_BACKUP_NAME }}
+      RESOURCE_GROUP_NAME: ${{ secrets.RESOURCE_GROUP_NAME }}
+      STORAGE_ACCOUNT_NAME: ${{ vars.STORAGE_ACCOUNT_NAME }
+
     steps:
       - name: Instalacion de azure.azcollection
         run: |
