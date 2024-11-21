@@ -15,8 +15,8 @@
         path: "{{ backup_dir }}"
         state: directory
         mode: '0755'
-        owner: db_user
-        group: db_user
+        owner: amdinuser2
+        group: adminuser2
       become: yes
     
     - name: Realizar backup de la base de datos PostgreSQL
@@ -27,8 +27,3 @@
       environment:
         PGUSER: db_user
         PGPASSWORD: db_password
-    
-    - name: Comprimir el archivo de respaldo
-      command: gzip "{{ backup_dir }}/{{ backup_filename }}"
-      args:
-        removes: "{{ backup_dir }}/{{ backup_filename }}"
