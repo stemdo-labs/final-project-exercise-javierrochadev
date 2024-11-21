@@ -33,47 +33,47 @@
         - "ARM_SUBSCRIPTION_ID: {{ lookup('env', 'ARM_SUBSCRIPTION_ID') }}"
         - "ARM_TENANT_ID: {{ lookup('env', 'ARM_TENANT_ID') }}"
 
-    - name: Crear el directorio de backups si no existe
-      file:
-        path: "/var/backups/postgres"
-        state: directory
-        mode: '0777'
+  - name: Crear el directorio de backups si no existe
+    file:
+      path: "/var/backups/postgres"
+      state: directory
+      mode: '0777'
  
-    - name: Dump y cifrar la base de datos PostgreSQL
-      shell: |
-        pg_dump -U {{ postgres_user }} {{ postgres_db }} | gzip | openssl enc -aes-256-cbc -salt -out {{ backup_file }} -k "{{ encryption_key }}"
-      environment:
-        PGPASSWORD: "{{ db_password }}"
-      register: backup_result
+  - name: Dump y cifrar la base de datos PostgreSQL
+    shell: |
+      pg_dump -U {{ postgres_user }} {{ postgres_db }} | gzip | openssl enc -aes-256-cbc -salt -out {{ backup_file }} -k "{{ encryption_key }}"
+    environment:
+      PGPASSWORD: "{{ db_password }}"
+    register: backup_result
 
-    - name: Verificar si el dump y cifrado fue exitoso
-      debug:
-        msg: "Backup creado correctamente en {{ backup_file }}"
-      when: backup_result.rc == 0
+  - name: Verificar si el dump y cifrado fue exitoso
+    debug:
+      msg: "Backup creado correctamente en {{ backup_file }}"
+    when: backup_result.rc == 0
 
-    - name: Crear directorio local para backups si no existe
-      file:
-        path: "{{ local_backup_dir }}"
-        state: directory
-        mode: '0777'
-      delegate_to: localhost
+  - name: Crear directorio local para backups si no existe
+    file:
+      path: "{{ local_backup_dir }}"
+      state: directory
+      mode: '0777'
+    delegate_to: localhost
 
-    - name: Copiar el archivo de backup a la máquina local
-      fetch:
-        src: "{{ backup_file }}"
-        dest: "{{ local_backup_dir }}/"
-        flat: true
+  - name: Copiar el archivo de backup a la máquina local
+    fetch:
+      src: "{{ backup_file }}"
+      dest: "{{ local_backup_dir }}/"
+      flat: true
 
-    - name: Subir archivo al contenedor de Azure
-      azure.azcollection.azure_rm_storageblob:
-        resource_group: "{{ RESOURCE_GROUP_NAME }}"
-        storage_account_name: "{{ STORAGE_ACCOUNT_NAME }}"
-        container_name: "{{ CONTAINER_BACKUP_NAME }}"
-        blob_name: "backup_{{ ansible_date_time.date }}.sql.gz.enc"
-        file_path: "{{ backup_file }}"
-        blob_type: "Block"
-        client_id: "{{ azure_client_id }}"
-        secret: "{{ azure_client_secret }}"
-        subscription_id: "{{ azure_subscription_id }}"
-        tenant: "{{ azure_tenant_id }}"
-      register: result_blob
+  - name: Subir archivo al contenedor de Azure
+    azure.azcollection.azure_rm_storageblob:
+      resource_group: "{{ RESOURCE_GROUP_NAME }}"
+      storage_account_name: "{{ STORAGE_ACCOUNT_NAME }}"
+      container_name: "{{ CONTAINER_BACKUP_NAME }}"
+      blob_name: "backup_{{ ansible_date_time.date }}.sql.gz.enc"
+      file_path: "{{ backup_file }}"
+      blob_type: "Block"
+      client_id: "{{ azure_client_id }}"
+      secret: "{{ azure_client_secret }}"
+      subscription_id: "{{ azure_subscription_id }}"
+      tenant: "{{ azure_tenant_id }}"
+    register: result_blob
