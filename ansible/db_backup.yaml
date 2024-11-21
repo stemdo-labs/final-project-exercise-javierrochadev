@@ -21,7 +21,7 @@
     - name: Realizar el backup de la base de datos
       shell: >
         pg_dump -U {{ db_user }} -h 10.0.1.4 {{ db_name }} > /var/backups/postgresql/{{ db_name }}_{{ ansible_date_time.date }}.sql
-      become_user: postgres
+      become_user: adminuser1
  
     - name: Confirmar que el archivo de backup se creó
       stat:
