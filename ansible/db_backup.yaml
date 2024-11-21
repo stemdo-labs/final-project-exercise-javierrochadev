@@ -18,9 +18,12 @@
     
     - name: Realizar backup de la base de datos PostgreSQL
       shell: >
-        PGPASSWORD={{ db_password }} pg_dump -U {{ db_user }} {{ db_name }} > {{ backup_dir }}/{{ backup_filename }}
+        pg_dump -h 127.0.0.1 -U myuser {{ db_name }}
+        > {{ backup_dir }}/{{ backup_file_name }}
+      become: no
       environment:
-        PGPASSWORD: "{{ db_password }}"
+        PGUSER: db_user
+        PGPASSWORD: db_password
     
     - name: Comprimir el archivo de respaldo
       command: gzip "{{ backup_dir }}/{{ backup_filename }}"
