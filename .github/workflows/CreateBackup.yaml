@@ -35,10 +35,17 @@ jobs:
         run: |
           ansible-galaxy collection install azure.azcollection
         working-directory: ./ansible
-      - name: Instalar pip3
+      - name: Instalar Python 2.7 y pip3
         run: |
           sudo apt update
-          sudo apt install -y python3-pip  # Instalar pip3
+
+          sudo apt install -y python2.7 python2.7-dev python3-pip
+
+          python2.7 --version
+
+          python3 -m pip install --upgrade pip
+          
+          pip3 --version
       - name: Instalacion de dependendias de python
         run: |
           pip3 install -r ~/.ansible/collections/ansible_collections/azure/azcollection/requirements.txt
