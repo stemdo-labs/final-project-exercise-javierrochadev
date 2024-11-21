@@ -28,7 +28,8 @@
       when: backup_result.rc == 0
       
     - name: Crear directorio local para backups si no existe
-      local_action: file
+      local_action:
+        module: file
         path: "{{ local_backup_dir }}"
         state: directory
         mode: '0755'
@@ -38,5 +39,3 @@
         src: "{{ backup_file }}"
         dest: "{{ local_backup_dir }}/"
         flat: yes
-      when: backup_result.rc == 0
- 
