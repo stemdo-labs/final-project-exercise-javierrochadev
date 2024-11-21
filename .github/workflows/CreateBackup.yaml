@@ -25,6 +25,10 @@ jobs:
       BACKUP_DIR: ${{ vars.BACKUP_DIR }}
 
     steps:
+      - name: Instalacion de azure.azcollection
+        run: |
+          ansible-galaxy collection install azure.azcollection
+        working-directory: ./ansible
       - name: Execute Database Backup playbook
         run: |
           ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini db_backup.yaml
