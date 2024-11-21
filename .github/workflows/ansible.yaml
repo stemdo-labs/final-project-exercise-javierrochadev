@@ -22,7 +22,8 @@ jobs:
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_USER: ${{ secrets.DB_USER }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      BACKUP_DIR: ${{ secrets.BACKUP_DIR }}
+      BACKUP_DIR: ${{ vars.BACKUP_DIR }}
+
  
     steps:
       - name: Checkout code
