@@ -19,6 +19,7 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      TOKEN_SAS: ${{ secrets.TOKEN_SAS }}
       PUBLIC_IP: ${{ vars.PUBLIC_IP }}
       
       DB_NAME: ${{ secrets.DB_NAME }}
@@ -38,12 +39,9 @@ jobs:
       - name: Instalacion de azcli
         run: |
           sudo install snap azcli
-      - name: Se crea un blob en azure
-        run: |
-          az storage container create --name $CONTAINER_BACKUP_NAME --account-name $STORAGE_ACCOUNT_NAME
       - name: Realizar copia a azure
         run: |
-           azcopy copy /.backups/backup.sql.gz.enc https://$STORAGE_ACCOUNT_NAME.blob.core.windows.net/$CONTAINER_BACKUP_NAME/backup.sql.gz.enc
+           azcopy copy /.backups/backup.sql.gz.enc https://$STORAGE_ACCOUNT_NAME.blob.core.windows.net/$CONTAINER_BACKUP_NAME/backup.sql.gz.enc?$TOKEN_SAS
         working-directory: ./ansible
         
 
