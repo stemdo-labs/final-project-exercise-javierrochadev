@@ -5,7 +5,7 @@
   vars:
     postgres_user: "postgres"
     postgres_db: "orquestas"
-    backup_file: "/var/backups/postgres/backup_{{ ansible_date_time.date }}.sql.gz.enc"
+    backup_file: "/var/backups/postgres/backup.sql.gz.enc"
     encryption_key: "G7x!#aB12$vf@kT"
     local_backup_dir: "./backups/"
     
