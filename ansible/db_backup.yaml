@@ -15,7 +15,7 @@
         path: "{{ backup_dir }}"
         state: directory
         mode: '0755'
-        owner: amdinuser2
+        owner: adminuser2
         group: adminuser2
       become: yes
     
