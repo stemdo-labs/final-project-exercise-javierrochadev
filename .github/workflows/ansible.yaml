@@ -18,6 +18,11 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
       PUBLIC_IP: ${{ vars.PUBLIC_IP }}
+      
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      BACKUP_DIR: ${{ secrets.BACKUP_DIR }}
  
     steps:
       - name: Checkout code
