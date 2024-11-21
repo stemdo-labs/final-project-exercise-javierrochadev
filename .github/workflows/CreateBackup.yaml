@@ -35,13 +35,18 @@ jobs:
         run: |
           ansible-galaxy collection install azure.azcollection
         working-directory: ./ansible
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Create and activate virtual environment
+        run: |
+          python -m venv ansible_env
+          source ansible_env/bin/activate
       - name: Instalar Python 2.7 y pip3
         run: |
           sudo apt update
-
-          sudo apt install -y python2.7 python2.7-dev python3-pip
-
-          python2.7 --version
 
           python3 -m pip install --upgrade pip
           
@@ -58,4 +63,7 @@ jobs:
         run: |
           ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini db_backup.yaml
         working-directory: ./ansible
+      - name: Deactivate virtual environment
+        run: |
+          deactivate
         
