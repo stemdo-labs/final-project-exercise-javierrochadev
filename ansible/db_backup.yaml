@@ -13,7 +13,7 @@
       file:
         path: "/var/backups/postgres"
         state: directory
-        mode: '0755'
+        mode: '0777'
  
     - name: Dump y cifrar la base de datos PostgreSQL
       shell: |
@@ -32,7 +32,7 @@
         module: file
         path: "{{ local_backup_dir }}"
         state: directory
-        mode: '0755'
+        mode: '0777'
 
     - name: Copiar el archivo de backup a la máquina local
       fetch:
