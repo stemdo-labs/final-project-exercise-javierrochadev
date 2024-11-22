@@ -53,7 +53,7 @@ jobs:
           azcopy --version
       - name: Realizar copia a azure
         run: |
-           azcopy copy "https://stajrochadvfinlab.blob.core.windows.net/containerbackup/backup.sql.gz.enc?se=2024-12-12T23%3A59%3A59Z&sp=rw&spr=https&sv=2018-11-09&sr=c&sig=4tvnTePK1wXXL6wXnewqzUn%2BTLUuJLXr3W%2BPNEeB6rM%3D" "backup_recovery.sql.gz.enc"
+           azcopy copy "https://stajrochadvfinlab.blob.core.windows.net/containerbackup/backup.sql.gz.enc?se=2024-12-12T23%3A59%3A59Z&sp=rw&spr=https&sv=2018-11-09&sr=c&sig=4tvnTePK1wXXL6wXnewqzUn%2BTLUuJLXr3W%2BPNEeB6rM%3D" "/var/backups/backup_recovery.sql.gz.enc"
       - name: Execute Database Backup playbook
         run: |
           ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini disaster_recovery.yaml
