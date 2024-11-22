@@ -3,7 +3,7 @@
   hosts: database_server
   become: true
   vars:
-    postgres_user: "myuser"
+    postgres_user: "postgres"
     postgres_db: "orquestas"
     backup_file: "/var/backups/backup.sql.gz.enc"
     encryption_key: "G7x!#aB12$vf@kT"
