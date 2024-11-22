@@ -65,7 +65,6 @@ jobs:
           tar -xvf azcopy.tar.gz
           sudo mv ./azcopy_linux_amd64_*/azcopy /usr/bin/azcopy
           azcopy --version
-          steps:
       - name: Obtener el último archivo de backup desde Azure Blob Storage
         run: |
           LAST_BLOB=$(az storage blob list \
