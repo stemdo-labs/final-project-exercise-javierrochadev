@@ -1,0 +1,23 @@
+name: 'Create Inventory File'
+description: 'Crea el archivo inventory.ini para Ansible con las credenciales de VM de la base de datos'
+
+inputs:
+  vm_bd_user:
+    description: 'Usuario de la VM de la base de datos'
+    required: true
+  vm_bd_pass:
+    description: 'Contraseña de la VM de la base de datos'
+    required: true
+  inventory_path:
+    description: 'Ruta donde se creará el archivo inventory.ini'
+    required: false
+    default: './ansible/inventory.ini'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Create inventory.ini file
+      run: |
+        echo "[database_server]" > ${{ inputs.inventory_path }}
+        echo "10.0.1.4 ansible_user=${{ inputs.vm_bd_user }} ansible_password=${{ inputs.vm_bd_pass }}" >> ${{ inputs.inventory_path }}
+      shell: bash
