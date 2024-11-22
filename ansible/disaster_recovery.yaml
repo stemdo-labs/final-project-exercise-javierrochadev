@@ -5,7 +5,6 @@
   vars:
     postgres_user: "postgres"
     postgres_db: "orquestas"
-    backup_file: "/var/backups/backup_recovery.sql"
     encryption_key: "G7x!#aB12$vf@kT"
     local_backup_dir: "/var/backups/"
     
@@ -22,8 +21,13 @@
     RESOURCE_GROUP_NAME: "{{ lookup('env', 'RESOURCE_GROUP_NAME') }}"
     STORAGE_ACCOUNT_NAME: "{{ lookup('env', 'STORAGE_ACCOUNT_NAME') }}"
     CONTAINER_BACKUP_NAME: "{{ lookup('env', 'CONTAINER_BACKUP_NAME') }}"
+    last_blob: "{{ lookup('env', 'LAST_BLOB') }}"
+    backup_file: "/var/backups/{{ last_blob }}"
  
   tasks:
+  - name: Eliminar '.gz.enc' usando slice
+      set_fact:
+        decripted_backup: "{{ last_blob[:-7] }}"
 
   - name: Crear el directorio de backups si no existe
     file:
@@ -33,15 +37,15 @@
 
   - name: Copiar archivo encriptado desde la máquina de control a los hosts gestionados
     ansible.builtin.copy:
-      src: "{{ local_backup_dir }}/backup_recovery.sql.gz.enc"
-      dest: "/var/backups/backup_recovery.sql.gz.enc"
+      src: "{{ local_backup_dir }}/{{ last_blob}}"
+      dest: "{{ backup_file }}"
       mode: '777'
   
   - name: Desencriptar y guardar el dump en los hosts gestionados
     ansible.builtin.shell: |
       openssl enc -d -aes-256-cbc \
-      -in "/var/backups/backup_recovery.sql.gz.enc" \
-      -k "{{ encryption_key }}" | gunzip > {{ backup_file }}
+      -in "{{ last_blob }}" \
+      -k "{{ encryption_key }}" | gunzip > "/var/backups/{{ decripted_backup }}"
     args:
       executable: /bin/bash
 
@@ -51,7 +55,7 @@
       cmd: >
         psql -U {{ db_user }}
         -d {{ db_name }}
-        -f {{ backup_file }}
+        -f "/var/backups/{{ decripted_backup }}"
     environment:
       PGPASSWORD: "{{ db_password }}"
 
