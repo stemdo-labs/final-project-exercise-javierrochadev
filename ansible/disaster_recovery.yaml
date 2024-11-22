@@ -1,4 +1,6 @@
----
+
+
+    ---
 - name: Backup
   hosts: database_server
   become: true
@@ -53,4 +55,6 @@
         -d {{ db_name }}
         -f {{ backup_file }}
     environment:
-      PGPASSWORD: {{ db_password }}
+      PGPASSWORD: "{{ db_password }}"
+
+      
