@@ -1,14 +1,17 @@
+
 - hosts: database_server
   become: yes
   vars:
-    postgresql_version: "14" 
+    # Configuración para PostgreSQL
+    postgresql_version: "12"  # O la versión que necesites
+    postgresql_databases:
+      - name: orquestas  # Nombre de la base de datos que deseas crear
+    postgresql_users:
+      - name: myuser  # Nombre del usuario
+        password: "mypassword"  # Contraseña del usuario
+        priv: "ALL"  # Privilegios sobre la base de datos
+        db: orquestas  # Base de datos a la que tendrá acceso
+
   roles:
-    - role: geerlingguy.postgresql
-      postgresql_databases:
-        - name: orquestas  
-          state: present  
-      postgresql_users:
-        - name: myuser 
-          password: mypassword  
-          encrypted: yes  
-          state: present  
+    - geerlingguy.postgresql
+
