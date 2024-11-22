@@ -1,6 +1,6 @@
 
 
-name: Backup
+name: Disaster Recovery
  
 on:
   workflow_dispatch:
