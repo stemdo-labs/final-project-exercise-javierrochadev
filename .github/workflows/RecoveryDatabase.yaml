@@ -37,6 +37,11 @@ jobs:
         
       - name: Crear carpeta /var/backups
         run: sudo mkdir -p /var/backups
+      - name: Create inventory.ini file
+        run: |
+          echo "[database_server]" > inventory.ini
+          echo "10.0.1.4 ansible_user=${{ secrets.VM_BD_USER }} ansible_password=${{ secrets.VM_BD_PASS }}" >> inventory.ini
+        working-directory: ./ansible
       
       - name: Install Azure CLI
         run: |
