@@ -44,3 +44,15 @@
       -k "{{ encryption_key }}" | gunzip > {{ backup_file }}
     args:
       executable: /bin/bash
+
+
+  - name: Cargar base de datos desde archivo SQL
+        ansible.builtin.command:
+          cmd: >
+            psql -U {{ db_user }}
+            -d {{ db_name }}
+            -f {{ backup_file }}
+        environment:
+          PGPASSWORD: {{ db_password }}
+
+
