@@ -1,16 +1,33 @@
-- hosts: database_sever
+- hosts: database_server
   become: yes
   vars:
-    # Configuración para PostgreSQL
-    postgresql_version: "14" 
-    postgresql_databases:
-      - name: orquestas 
-    postgresql_users:
-      - name: myuser
-        password: "mypassword"
-        priv: "SELECT, INSERT, UPDATE, DELETE"
-        db: orquestas
+    postgresql_hba_entries:
+      # Cambiar la autenticación de "peer" a "md5" para el usuario postgres
+      - { type: local, database: all, user: postgres, auth_method: md5 }
+      
+      # Cambiar la autenticación para todos los usuarios locales a "md5"
+      - { type: local, database: all, user: all, auth_method: md5 }
 
+      # Conexiones locales desde localhost y autenticación por contraseña para myuser
+      - { type: host, database: all, user: myuser, address: '127.0.0.1/32', auth_method: md5 }
+      - { type: host, database: all, user: myuser, address: '::1/128', auth_method: md5 }
+
+      # Permitir conexiones de myuser desde una red específica
+      - { type: host, database: orquestas, user: myuser, address: '192.168.1.0/24', auth_method: md5 }
+
+      # Permitir conexiones de cualquier usuario desde cualquier dirección IP
+      - { type: host, database: all, user: all, address: '0.0.0.0/0', auth_method: md5 }
+
+    postgresql_version: "14"
 
   roles:
-    - geerlingguy.postgresql
+    - role: geerlingguy.postgresql
+      postgresql_databases:
+        - name: orquestas
+          state: present
+
+      postgresql_users:
+        - name: myuser
+          password: mypassword
+          encrypted: yes
+          state: present
