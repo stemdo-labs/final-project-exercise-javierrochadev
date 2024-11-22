@@ -1,6 +1,6 @@
 ---
 - name: Configuración de PostgreSQL
-  hosts: all
+  hosts: database_server
   become: true
  
   vars:
