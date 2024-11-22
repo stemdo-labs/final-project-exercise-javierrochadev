@@ -32,6 +32,8 @@ jobs:
       STORAGE_ACCOUNT_NAME: ${{ secrets.STORAGE_ACCOUNT_NAME }}
 
     steps:
+      - name: Crear carpeta /var/backups
+        run: sudo mkdir -p /var/backups
       - name: Execute Database Backup playbook
         run: |
           ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini db_backup.yaml
@@ -54,7 +56,7 @@ jobs:
           azcopy --version
       - name: Realizar copia a azure
         run: |
-           azcopy copy /.backups/backup.sql.gz.enc https://$STORAGE_ACCOUNT_NAME.blob.core.windows.net/$CONTAINER_BACKUP_NAME/backup.sql.gz.enc?$TOKEN_SAS
+           azcopy copy /var/backups/backup.sql.gz.enc https://$STORAGE_ACCOUNT_NAME.blob.core.windows.net/$CONTAINER_BACKUP_NAME/backup.sql.gz.enc?$TOKEN_SAS
         working-directory: ./ansible
         
 
