@@ -5,7 +5,7 @@
   vars:
     postgres_user: "myuser"
     postgres_db: "orquestas"
-    backup_file: "/var/backups/postgres/backup.sql.gz.enc"
+    backup_file: "/var/backups/backup.sql.gz.enc"
     encryption_key: "G7x!#aB12$vf@kT"
     local_backup_dir: "/var/backups/"
     
@@ -27,7 +27,7 @@
 
   - name: Crear el directorio de backups si no existe
     file:
-      path: "/var/backups/postgres"
+      path: "/var/backups/"
       state: directory
       mode: '0777'
  
