@@ -69,7 +69,7 @@ jobs:
           azcopy --version
       - name: Realizar copia a azure
         run: |
-           azcopy copy /var/backups/backup-${{ env.MY_DATE }}.sql.gz.enc https://$STORAGE_ACCOUNT_NAME.blob.core.windows.net/$CONTAINER_BACKUP_NAME/backup.sql.gz.enc?$TOKEN_SAS
+           azcopy copy /var/backups/backup-${{ env.MY_DATE }}.sql.gz.enc https://$STORAGE_ACCOUNT_NAME.blob.core.windows.net/$CONTAINER_BACKUP_NAME/backup-${{ env.MY_DATE }}.sql.gz.enc?$TOKEN_SAS
         working-directory: ./ansible
         
 
