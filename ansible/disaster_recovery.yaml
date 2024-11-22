@@ -5,7 +5,7 @@
   vars:
     postgres_user: "postgres"
     postgres_db: "orquestas"
-    backup_file: "/var/backups/postgres/backup_recovery.sql"
+    backup_file: "/var/backups/backup_recovery.sql"
     encryption_key: "G7x!#aB12$vf@kT"
     local_backup_dir: "/var/backups/"
     
@@ -34,13 +34,13 @@
   - name: Copiar archivo encriptado desde la máquina de control a los hosts gestionados
     ansible.builtin.copy:
       src: "{{ local_backup_dir }}/backup_recovery.sql.gz.enc"
-      dest: "/var/backups/postgres/backup_recovery.sql.gz.enc"
+      dest: "/var/backups/backup_recovery.sql.gz.enc"
       mode: '777'
   
   - name: Desencriptar y guardar el dump en los hosts gestionados
     ansible.builtin.shell: |
       openssl enc -d -aes-256-cbc \
-      -in "/var/backups/postgres/backup_recovery.sql.gz.enc" \
+      -in "/var/backups/backup_recovery.sql.gz.enc" \
       -k "{{ encryption_key }}" | gunzip > {{ backup_file }}
     args:
       executable: /bin/bash
