@@ -5,7 +5,6 @@
   vars:
     postgres_user: "postgres"
     postgres_db: "orquestas"
-    backup_file: "/var/backups/backup.sql.gz.enc"
     encryption_key: "G7x!#aB12$vf@kT"
     local_backup_dir: "/var/backups/"
     
@@ -22,7 +21,9 @@
     RESOURCE_GROUP_NAME: "{{ lookup('env', 'RESOURCE_GROUP_NAME') }}"
     STORAGE_ACCOUNT_NAME: "{{ lookup('env', 'STORAGE_ACCOUNT_NAME') }}"
     CONTAINER_BACKUP_NAME: "{{ lookup('env', 'CONTAINER_BACKUP_NAME') }}"
- 
+    my_date: "{{ lookup('env', 'MY_DATE') }}"
+    backup_file: "backup-{{ my_date }}.sql.gz.enc"
+    
   tasks:
 
   - name: Crear el directorio de backups si no existe
@@ -38,7 +39,7 @@
 
   - name: Verificar si el dump y cifrado fue exitoso
     debug:
-      msg: "Backup creado correctamente en {{ backup_file }}"
+      msg: "Backup creado correctamente en {{ backup_file }"
     when: backup_result.rc == 0
 
   - name: Crear directorio local para backups si no existe
