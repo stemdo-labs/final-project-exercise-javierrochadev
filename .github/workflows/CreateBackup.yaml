@@ -1,4 +1,4 @@
-name: Backup
+name: Disaster Recovery
  
 on:
   workflow_dispatch:
@@ -32,6 +32,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        
       - name: Crear carpeta /var/backups
         run: sudo mkdir -p /var/backups
       - name: Create inventory.ini
@@ -40,20 +41,17 @@ jobs:
           vm_bd_user: ${{ secrets.VM_BD_USER }}
           vm_bd_pass: ${{ secrets.VM_BD_PASS }}
           inventory_path: ./ansible/inventory.ini
-      - name: Execute Database Backup playbook
-        run: |
-          ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini db_backup.yaml
-        working-directory: ./ansible
+      
       - name: Install Azure CLI
         run: |
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
  
-      - name: Login to Azure
-        uses: ./.github/actions/azure_login
-        with:
-          client_id: ${{ secrets.ARM_CLIENT_ID }}
-          client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
-          tenant_id: ${{ secrets.ARM_TENANT_ID }}
+      - name: Login to Azure with Service Principal
+        run: |
+          az login --service-principal \
+            -u ${{ secrets.ARM_CLIENT_ID }} \
+            -p ${{ secrets.ARM_CLIENT_SECRET }} \
+            --tenant ${{ secrets.ARM_TENANT_ID }}
       - name: Install AzCopy
         run: |
           wget -O azcopy.tar.gz https://aka.ms/downloadazcopy-v10-linux
@@ -62,8 +60,8 @@ jobs:
           azcopy --version
       - name: Realizar copia a azure
         run: |
-           azcopy copy /var/backups/backup.sql.gz.enc https://$STORAGE_ACCOUNT_NAME.blob.core.windows.net/$CONTAINER_BACKUP_NAME/backup.sql.gz.enc?$TOKEN_SAS
+           azcopy copy "https://$STORAGE_ACCOUNT_NAME.blob.core.windows.net/$CONTAINER_BACKUP_NAME/backup.sql.gz.enc?${{ secrets.TOKEN_SAS }}" "/var/backups/backup_recovery.sql.gz.enc"
+      - name: Execute Database Backup playbook
+        run: |
+          ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini disaster_recovery.yaml
         working-directory: ./ansible
-        
-
-        
