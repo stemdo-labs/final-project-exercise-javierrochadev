@@ -1,0 +1,62 @@
+
+
+name: Backup
+ 
+on:
+  workflow_dispatch:
+
+permissions:
+  pull-requests: write
+  contents: read
+ 
+jobs:
+  ansible:
+    name: Ansible Workflow
+    runs-on: self-hosted
+ 
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      TOKEN_SAS: ${{ secrets.TOKEN_SAS }}
+      PUBLIC_IP: ${{ vars.PUBLIC_IP }}
+      
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      BACKUP_DIR: ${{ vars.BACKUP_DIR }}
+
+      CONTAINER_BACKUP_NAME: ${{ secrets.CONTAINER_BACKUP_NAME }}
+      RESOURCE_GROUP_NAME: ${{ secrets.RESOURCE_GROUP_NAME }}
+      STORAGE_ACCOUNT_NAME: ${{ secrets.STORAGE_ACCOUNT_NAME }}
+
+    steps:
+      - name: Crear carpeta /var/backups
+        run: sudo mkdir -p /var/backups
+      
+      - name: Install Azure CLI
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+ 
+      - name: Login to Azure with Service Principal
+        run: |
+          az login --service-principal \
+            -u ${{ secrets.ARM_CLIENT_ID }} \
+            -p ${{ secrets.ARM_CLIENT_SECRET }} \
+            --tenant ${{ secrets.ARM_TENANT_ID }}
+      - name: Install AzCopy
+        run: |
+          wget -O azcopy.tar.gz https://aka.ms/downloadazcopy-v10-linux
+          tar -xvf azcopy.tar.gz
+          sudo mv ./azcopy_linux_amd64_*/azcopy /usr/bin/azcopy
+          azcopy --version
+      - name: Realizar copia a azure
+        run: |
+           azcopy copy "https://stajrochadvfinlab.blob.core.windows.net/containerbackup/backup.sql.gz.enc?se=2024-12-12T23%3A59%3A59Z&sp=rw&spr=https&sv=2018-11-09&sr=c&sig=4tvnTePK1wXXL6wXnewqzUn%2BTLUuJLXr3W%2BPNEeB6rM%3D" "backup_recovery.sql.gz.enc"
+      - name: Execute Database Backup playbook
+        run: |
+          ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini disaster_recovery.yaml
+        working-directory: ./ansible
+  
+        
