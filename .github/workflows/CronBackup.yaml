@@ -1,4 +1,4 @@
-name: Backup
+name: Cron
  
 on:
   workflow_dispatch:
