@@ -5,7 +5,7 @@
   vars:
     postgres_user: "postgres"
     postgres_db: "orquestas"
-    backup_file: "/var/backups/backup.sql.gz.enc"
+    backup_file: "/var/backups/postgres/backup_recovery.sql"
     encryption_key: "G7x!#aB12$vf@kT"
     local_backup_dir: "/var/backups/"
     
@@ -27,31 +27,30 @@
 
   - name: Crear el directorio de backups si no existe
     file:
-      path: "/var/backups/"
+      path: "/var/backups/postgres"
       state: directory
       mode: '0777'
- 
-  - name: Dump y cifrar la base de datos PostgreSQL
-    shell: |
-      PGPASSWORD={{ db_password }}  pg_dump -U {{ db_user }} {{ db_name }} | gzip | openssl enc -aes-256-cbc -salt -out {{ backup_file }} -k "{{ encryption_key }}"
-    register: backup_result
 
-  - name: Verificar si el dump y cifrado fue exitoso
-    debug:
-      msg: "Backup creado correctamente en {{ backup_file }}"
-    when: backup_result.rc == 0
-
-  - name: Crear directorio local para backups si no existe
-    file:
-      path: "{{ local_backup_dir }}"
-      state: directory
-      mode: '0777'
-    delegate_to: localhost
-
-  - name: Copiar el archivo de backup a la máquina local
-    fetch:
-      src: "{{ backup_file }}"
-      dest: "{{ local_backup_dir }}/"
-      flat: true
+  - name: Copiar archivo encriptado desde la máquina de control a los hosts gestionados
+    ansible.builtin.copy:
+      src: "{{ local_backup_dir }}/backup_recovery.sql.gz.enc"
+      dest: "/var/backups/postgres/backup_recovery.sql.gz.enc"
+      mode: '777'
+  
+  - name: Desencriptar y guardar el dump en los hosts gestionados
+    ansible.builtin.shell: |
+      openssl enc -d -aes-256-cbc \
+      -in "/var/backups/postgres/backup_recovery.sql.gz.enc" \
+      -k "{{ encryption_key }}" | gunzip > {{ backup_file }}
+    args:
+      executable: /bin/bash
 
 
+  - name: Cargar base de datos desde archivo SQL
+    ansible.builtin.command:
+      cmd: >
+        psql -U {{ db_user }}
+        -d {{ db_name }}
+        -f {{ backup_file }}
+    environment:
+      PGPASSWORD: {{ db_password }}

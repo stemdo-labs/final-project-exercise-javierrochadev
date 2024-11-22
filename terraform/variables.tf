@@ -1,7 +1,3 @@
-variable "AZURE_CLIENT_ID" {}
-variable "AZURE_CLIENT_SECRET" {}
-variable "AZURE_TENANT_ID" {}
-variable "AZURE_SUBSCRIPTION_ID" {}
 
 
 variable "resource_group_name" {
@@ -26,7 +22,7 @@ variable "subnet_names" {
 variable "storage_account_name" {
   description = "Los nombres de las dubredes de Azure"
   type        = string
-  default     = "stoageaccount"
+  default     = "stajrochadvfinlab"
 }
 
 variable "container_name" {
@@ -61,10 +57,12 @@ variable "vm_config" {
     admin_username = "adminuser1"
     admin_password = "P@ssw0rd1234!"
     subnet_name    = "subnet1"
-    os_publisher   = "Canonical"
-    os_offer       = "UbuntuServer"
-    os_sku         = "22.04-LTS"      # Ubuntu 18.04 LTS Desktop
-    os_version     = "latest"
+    os_publisher = "Canonical"
+    os_offer     = "0001-com-ubuntu-server-jammy"
+    os_sku       = "22_04-lts"
+    os_version   = "latest"
+
+
   },
   1 = {
     public_ip      = true
@@ -74,10 +72,12 @@ variable "vm_config" {
     admin_username = "adminuser2"
     admin_password = "P@ssw0rd5678!"
     subnet_name    = "subnet2"
-    os_publisher   = "Canonical"
-    os_offer       = "UbuntuServer"
-    os_sku         = "22.04-LTS"      # Ubuntu 18.04 LTS Desktop
-    os_version     = "latest"
+    os_publisher = "Canonical"
+    os_offer     = "0001-com-ubuntu-server-jammy"
+    os_sku       = "22_04-lts"
+    os_version   = "latest"
+
+
   }
 }
 
