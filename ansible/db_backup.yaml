@@ -1,6 +1,6 @@
 ---
 - name: Backup
-  hosts: 10.0.1.4
+  hosts: database_server
   become: true
   vars:
     postgres_user: "postgres"
