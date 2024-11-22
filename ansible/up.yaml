@@ -2,7 +2,7 @@
   become: yes
   vars:
     # Configuración para PostgreSQL
-    postgresql_version: "14"   O la versión que necesites
+    postgresql_version: "14" 
     postgresql_databases:
       - name: orquestas 
     postgresql_users:
