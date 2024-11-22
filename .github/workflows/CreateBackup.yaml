@@ -1,7 +1,8 @@
 name: Backup
  
 on:
-  workflow_dispatch:
+  schedule:
+    - cron: '43 17 * * *'
 
 permissions:
   pull-requests: write
