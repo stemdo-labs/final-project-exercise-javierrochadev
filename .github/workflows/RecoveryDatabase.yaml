@@ -60,12 +60,26 @@ jobs:
           tar -xvf azcopy.tar.gz
           sudo mv ./azcopy_linux_amd64_*/azcopy /usr/bin/azcopy
           azcopy --version
+          steps:
+      - name: Obtener el último archivo de backup desde Azure Blob Storage
+          id: get_last_blob
+          run: |
+            # Ejecutar el comando az y procesar la salida con jq
+            LAST_BLOB=$(az storage blob list \
+              --account-name stajrochadvfinlab \
+              --container-name backupcontainer \
+              --query "[].{name:name, lastModified:properties.lastModified}" \
+              --output json | jq -r 'sort_by(.lastModified) | .[-1].name')
+
+              echo "LAST_BLOB=$LAST_BLOB" >> $GITHUB_ENV
+
       - name: Realizar copia a azure
         run: |
-           azcopy copy "https://$STORAGE_ACCOUNT_NAME.blob.core.windows.net/$CONTAINER_BACKUP_NAME/backup.sql.gz.enc?${{ secrets.TOKEN_SAS }}" "/var/backups/backup_recovery.sql.gz.enc"
+           azcopy copy "https://$STORAGE_ACCOUNT_NAME.blob.core.windows.net/$CONTAINER_BACKUP_NAME/$LAST_BLOB?${{ secrets.TOKEN_SAS }}" "/var/backups/$LAST_BLOB"
       - name: Execute Database Backup playbook
         run: |
           ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini disaster_recovery.yaml
         working-directory: ./ansible
+        env:
+          LAST_BLOB: ${{ env.LAST_BLOB }}
   
-        
