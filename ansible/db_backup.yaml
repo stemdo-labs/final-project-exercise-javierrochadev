@@ -33,9 +33,7 @@
  
   - name: Dump y cifrar la base de datos PostgreSQL
     shell: |
-      export PGPASSWORD={{ db_password }} && pg_dump -U {{ db_user }} {{ db_name }} | gzip | openssl enc -aes-256-cbc -salt -out {{ backup_file }} -k "{{ encryption_key }}"
-    environment:
-      PGPASSWORD: "{{ db_password }}"
+      PGPASSWORD={{ db_password }}  pg_dump -U {{ db_user }} {{ db_name }} | gzip | openssl enc -aes-256-cbc -salt -out {{ backup_file }} -k "{{ encryption_key }}"
     register: backup_result
 
   - name: Verificar si el dump y cifrado fue exitoso
