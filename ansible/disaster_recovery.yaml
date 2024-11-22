@@ -26,8 +26,8 @@
  
   tasks:
   - name: Eliminar '.gz.enc' usando slice
-      set_fact:
-        decripted_backup: "{{ last_blob[:-7] }}"
+    set_fact:
+      decripted_backup: "{{ last_blob[:-7] }}"
 
   - name: Crear el directorio de backups si no existe
     file:
