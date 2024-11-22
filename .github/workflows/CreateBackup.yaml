@@ -35,7 +35,7 @@ jobs:
       - name: Crear carpeta /var/backups
         run: sudo mkdir -p /var/backups
       - name: Create inventory.ini
-        uses: ./.github/actions/create-inventory
+        uses: ./.github/actions/create_inventory
         with:
           vm_bd_user: ${{ secrets.VM_BD_USER }}
           vm_bd_pass: ${{ secrets.VM_BD_PASS }}
