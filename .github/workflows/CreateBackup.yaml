@@ -32,6 +32,8 @@ jobs:
       STORAGE_ACCOUNT_NAME: ${{ secrets.STORAGE_ACCOUNT_NAME }}
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
       - name: Crear carpeta /var/backups
         run: sudo mkdir -p /var/backups
       - name: Execute Database Backup playbook
