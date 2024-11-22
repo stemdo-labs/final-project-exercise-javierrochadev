@@ -38,9 +38,9 @@
       mode: '777'
   
   - name: Desencriptar y guardar el dump en los hosts gestionados
-    ansible.builtin.command:
-      cmd: >
-        openssl enc -d -aes-256-cbc
-        -in "/var/backups/postgres/backup_recovery.sql.gz.enc"
-        -k "{{ encryption_key }}"
-        | gunzip > {{ backup_file }}
+    ansible.builtin.shell: |
+      openssl enc -d -aes-256-cbc \
+      -in "/var/backups/postgres/backup_recovery.sql.gz.enc" \
+      -k "{{ encryption_key }}" | gunzip > {{ backup_file }}
+    args:
+      executable: /bin/bash
