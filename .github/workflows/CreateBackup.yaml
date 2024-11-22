@@ -49,7 +49,7 @@ jobs:
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
  
       - name: Login to Azure
-        uses: ./.github/actions/azure-login
+        uses: ./.github/actions/azure_login
         with:
           client_id: ${{ secrets.ARM_CLIENT_ID }}
           client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
