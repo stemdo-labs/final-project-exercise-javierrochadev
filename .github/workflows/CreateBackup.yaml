@@ -42,7 +42,7 @@ jobs:
           inventory_path: ./ansible/inventory.ini
       - name: Execute Database Backup playbook
         run: |
-          ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini db_backup.yaml
+          ANSIBLE_HOST_KEY_CHECKING=False ansible_playbook -i inventory.ini db_backup.yaml
         working-directory: ./ansible
       - name: Install Azure CLI
         run: |
