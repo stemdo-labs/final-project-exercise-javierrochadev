@@ -34,6 +34,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      
+      - name: Install jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
         
       - name: Crear carpeta /var/backups
         run: sudo mkdir -p /var/backups
@@ -62,15 +67,13 @@ jobs:
           azcopy --version
           steps:
       - name: Obtener el último archivo de backup desde Azure Blob Storage
-          run: |
-            # Ejecutar el comando az y procesar la salida con jq
-            LAST_BLOB=$(az storage blob list \
-              --account-name stajrochadvfinlab \
-              --container-name backupcontainer \
-              --query "[].{name:name, lastModified:properties.lastModified}" \
-              --output json | jq -r 'sort_by(.lastModified) | .[-1].name')
-
-              echo "LAST_BLOB=$LAST_BLOB" >> $GITHUB_ENV
+        run: |
+          LAST_BLOB=$(az storage blob list \
+            --account-name stajrochadvfinlab \
+            --container-name backupcontainer \
+            --query "[].{name:name, lastModified:properties.lastModified}" \
+            --output json | jq -r 'sort_by(.lastModified) | .[-1].name')
+            echo "LAST_BLOB=$LAST_BLOB" >> $GITHUB_ENV
 
       - name: Realizar copia a azure
         run: |
