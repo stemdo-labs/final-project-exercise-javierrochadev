@@ -31,10 +31,16 @@
       state: directory
       mode: '0777'
 
-  - name: Copiar archivo al destino
-      ansible.builtin.copy:
-        src: {{ local_backup_dir }}/backup_recovery.sql.gz.enc
-        dest: openssl enc -d -aes-256-cbc -in {{ backup_file }} -k "{{ encryption_key }}" | gunzip > {{ backup_file }}
-        mode: '0777'
-
- 
+  - name: Copiar archivo encriptado desde la máquina de control a los hosts gestionados
+    ansible.builtin.copy:
+      src: "{{ backup_file }}"
+      dest: "{{ remote_backup_dir }}/backup_recovery.sql.gz.enc"
+      mode: '777'
+  
+  - name: Desencriptar y guardar el dump en los hosts gestionados
+    ansible.builtin.command:
+      cmd: >
+        openssl enc -d -aes-256-cbc
+        -in {{ remote_backup_dir }}/backup_recovery.sql.gz.enc
+        -k "{{ encryption_key }}"
+        | gunzip > {{ remote_backup_dir }}/backup_recovery.sql
