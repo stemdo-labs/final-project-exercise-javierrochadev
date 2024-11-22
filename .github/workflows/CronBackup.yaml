@@ -69,8 +69,8 @@ jobs:
       - name: Realizar subida del archivo a azure
         run: |
           az storage blob upload \
-          --account-name {{ STORAGE_ACCOUNT_NAME }} \
-          --container-name {{ CONTAINER_BACKUP_NAME }} \
+          --account-name $STORAGE_ACCOUNT_NAME\
+          --container-name $CONTAINER_BACKUP_NAME \
           --file /var/backups/backup.sql.gz.enc \
           --name "backup-${MY_DATE}.db" 
         working-directory: ./ansible
