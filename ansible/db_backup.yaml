@@ -55,4 +55,3 @@
       dest: "{{ local_backup_dir }}/"
       flat: true
 
-
