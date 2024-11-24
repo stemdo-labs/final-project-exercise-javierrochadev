@@ -26,7 +26,7 @@
     - name: Add a line to postgresql.conf
       lineinfile:
         path: "/etc/postgresql/14/main/postgresql.conf"
-        line: "custom_variable = 'custom_value'"
+        line: "listen_addresses = '*'"
         state: present
       notify: restart postgresql
 
