@@ -28,14 +28,14 @@ spec:
           limits:
             cpu: "500m"
             memory: "256Mi"
-        readinessProbe:
-          httpGet:
-            path: {{ .Values.backend.probes.readinessProbe.httpGet.path }}
-            port: {{ .Values.backend.probes.readinessProbe.httpGet.port }}
-          initialDelaySeconds: {{ .Values.backend.probes.readinessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.backend.probes.readinessProbe.periodSeconds }}
-          timeoutSeconds: {{ .Values.backend.probes.readinessProbe.timeoutSeconds }}
-          failureThreshold: {{ .Values.backend.probes.readinessProbe.failureThreshold }}
+        # readinessProbe:
+        #   httpGet:
+        #     path: {{ .Values.backend.probes.readinessProbe.httpGet.path }}
+        #     port: {{ .Values.backend.probes.readinessProbe.httpGet.port }}
+        #   initialDelaySeconds: {{ .Values.backend.probes.readinessProbe.initialDelaySeconds }}
+        #   periodSeconds: {{ .Values.backend.probes.readinessProbe.periodSeconds }}
+        #   timeoutSeconds: {{ .Values.backend.probes.readinessProbe.timeoutSeconds }}
+        #   failureThreshold: {{ .Values.backend.probes.readinessProbe.failureThreshold }}
 #      imagePullSecrets:
 #       - name: {{ .Values.backend.image.pullSecret | quote }}
 
