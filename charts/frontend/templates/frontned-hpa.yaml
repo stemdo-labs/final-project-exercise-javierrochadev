@@ -8,12 +8,12 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: frontend-app
-  minReplicas: {{ .Values.frontend.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.frontend.autoscaling.maxReplicas }}
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
   - type: Resource
     resource:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: {{ .Values.frontend.autoscaling.targetCPUUtilizationPercentage }}
+        averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
