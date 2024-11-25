@@ -16,10 +16,6 @@ inputs:
   chart_name:
     description: 'Name of the Helm chart'
     required: true
-  harbor_repo:
-    description: 'Harbor repository name'
-    required: true
-    default: 'ctenorio'
 
 runs:
   using: 'bash'
@@ -42,5 +38,5 @@ runs:
     
     - name: Push Helm Chart to Harbor
       run: |
-        helm push $(ls ${inputs.chart_name}-*.tgz) oci://${{ inputs.harbor_ip }}/${{ inputs.harbor_repo }}
+        helm push $(ls ${inputs.chart_name}-*.tgz) oci://${{ inputs.harbor_ip }}/${{ inputs.harbor_username }}
       working-directory: ${{ inputs.chart_directory }}

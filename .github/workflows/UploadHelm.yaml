@@ -1,0 +1,29 @@
+name: Empaquetar y subir el chart a Harbor
+
+on:
+  workflow_dispatch:
+    inputs:
+      chart_name:
+        description: 'Selecciona el nombre del Helm Chart a subir'
+        required: true
+        type: choice
+        options:
+          - backend
+          - frontend
+
+jobs:
+  package-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Use custom action to package and push Helm chart
+      uses: ./path/to/your/action
+      with:
+        chart_name: ${{ inputs.chart_name }}
+        chart_directory: './charts'
+        harbor_username: ${{ secrets.HARBOR_USER }}
+        harbor_password: ${{ secrets.HARBOR_PASS }}
+        harbor_ip: ${{ secrets.HARBOR_IP }}
