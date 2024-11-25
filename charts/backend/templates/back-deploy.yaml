@@ -16,7 +16,9 @@ spec:
       imagePullSecrets:    
         - name: {{ .Values.image.pullSecret }}
       containers:
-      env:
+      - name: backend-app  # Aquí se define el nombre del contenedor
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        env:
           - name: SPRING_DB_HOST
             valueFrom:
               configMapKeyRef:
@@ -44,5 +46,3 @@ spec:
                 key: SPRING_DB_PASSWORD
         ports:
           - containerPort: 8080  # Puerto que escucha tu backend
-      # imagePullSecrets:
-      #  - name: acr-secret-backend
