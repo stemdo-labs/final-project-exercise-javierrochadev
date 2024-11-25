@@ -1,4 +1,4 @@
-name: 'Deploy to AKS with Helm'
+name: 'Upload helm chart to harbor'
 description: 'Deploys an app to AKS using Helm'
 inputs:
   acr_name:
