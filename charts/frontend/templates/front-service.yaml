@@ -1,10 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-service
+  name: {{ .Release.Name }}-frontend-service
+  namespace: {{ .Release.Namespace }}
 spec:
   selector:
-    app: frontend-app
+    app: {{ .Release.Name }}-frontend-app
   ports:
     - protocol: TCP
       port: 80

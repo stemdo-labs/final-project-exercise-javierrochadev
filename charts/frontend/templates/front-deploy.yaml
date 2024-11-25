@@ -1,22 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend-app
+  name: {{ .Release.Name }}-frontend-app
+  namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: frontend-app
+      app: {{ .Release.Name }}-frontend-app
   template:
     metadata:
       labels:
-        app: frontend-app
+        app: {{ .Release.Name }}-frontend-app
     spec:
       containers:
-      - name: frontend-app
-        image: "{{ .Values.image.repository}}:{{ .Values.image.tag}}"
+      - name: {{ .Release.Name }}-frontend-app
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         ports:
         - containerPort: 80
-      # imagePullSecrets:
-      # - name: acr-secret-frontend
-
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+          initialDelaySeconds: {{ .Values.probes.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.probes.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.probes.readinessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.probes.readinessProbe.failureThreshold }}
