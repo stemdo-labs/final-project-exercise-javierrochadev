@@ -1,29 +1,51 @@
-name: Empaquetar y subir el chart a Harbor
+# .github/workflows/main-deploy.yaml
+name: Main Deployment Workflow
 
 on:
   workflow_dispatch:
-    inputs:
-      chart_name:
-        description: 'Selecciona el nombre del Helm Chart a subir'
-        required: true
-        type: choice
-        options:
-          - backend
-          - frontend
 
 jobs:
-  package-and-push:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Check out repository
+        uses: actions/checkout@v3
 
-    - name: Use custom action to package and push Helm chart
-      uses: ./.github/actions/upload_helm
-      with:
-        chart_name: ${{ inputs.chart_name }}
-        chart_directory: './charts'
-        harbor_username: ${{ secrets.HARBOR_USER }}
-        harbor_password: ${{ secrets.HARBOR_PASS }}
-        harbor_ip: ${{ secrets.HARBOR_IP }}
+      # - name: Usar la acción para extraer la versión
+      #   uses: ./.github/actions/extract-version
+      #   id: extract_version
+      #   with:
+      #     file: '/pom.xml'
+
+      # - name: Imprimir la versión extraída
+      #   id: show_version
+      #   run: echo "La versión es: ${{ steps.extract_version.outputs.version }}"
+
+      # - name: Build and Push Docker Image
+      #   uses: ./.github/actions/upload_image
+      #   with:
+      #     acr_name: ${{ secrets.ACR_NAME }}
+      #     image_name: "myapp-frontend"
+      #     image_tag: "4.0.0"
+      #     arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
+      #     arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
+      #     arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
+
+      - name: Upload an image 
+        uses: ./.github/actions/deploy
+        with:
+          acr_name: ${{ secrets.ACR_NAME }}
+          image_name: "myapp-frontend"
+          image_tag: "4.0.0"
+          arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
+          arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
+          arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
+          aks_resource_group: ${{ secrets.RESOURCE_GROUP_NAME }}
+          aks_cluster_name: ${{ secrets.AKS_NAME }}
+          acr_secret_name: ${{ secrets.ACR_SECRET_NAME }}
+          chart_name: "fontend"
+          harbor_username: ${{ secrets.HARBOR_USER }}
+          harbor_password: ${{ secrets.HARBOR_PASS }}
+          harbor_ip: ${{ secrets.HARBOR_IP }}
+          
