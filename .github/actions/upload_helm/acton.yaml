@@ -19,7 +19,6 @@ inputs:
   harbor_repo:
     description: 'Harbor repository name'
     required: true
-    default: 'ctenorio'
 
 runs:
   using: 'bash'
