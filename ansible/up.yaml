@@ -21,3 +21,17 @@
           password: mypassword
           encrypted: yes
           state: present
+
+  tasks:
+    - name: Add a line to postgresql.conf
+      lineinfile:
+        path: "/etc/postgresql/14/main/postgresql.conf"
+        line: "listen_addresses = '*'"
+        state: present
+      notify: restart postgresql
+
+  handlers:
+    - name: restart postgresql
+      service:
+        name: postgresql
+        state: restarted
