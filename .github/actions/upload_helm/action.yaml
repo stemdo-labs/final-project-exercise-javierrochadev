@@ -1,42 +1,101 @@
-name: 'Package and Push Helm Chart to Harbor'
-description: 'Package Helm chart and push it to Harbor'
+name: 'Deploy to AKS with Helm'
+description: 'Deploys an app to AKS using Helm'
 inputs:
+  acr_name:
+    description: 'Azure Container Registry name'
+    required: true
+    type: string
+  image_name:
+    description: 'Name of the Docker image'
+    required: true
+    type: string
+  image_tag:
+    description: 'Tag for the Docker image'
+    required: true
+    type: string
+  arm_client_id:
+    description: 'Azure Client ID'
+    required: true
+    type: string
+  arm_client_secret:
+    description: 'Azure Client Secret'
+    required: true
+    type: string
+  arm_tenant_id:
+    description: 'Azure Tenant ID'
+    required: true
+    type: string
+  arm_subscription_id:
+    description: 'Azure Subscription ID'
+    required: true
+    type: string
+  aks_resource_group:
+    description: 'Azure Resource Group of AKS'
+    required: true
+    type: string
+  aks_cluster_name:
+    description: 'Azure AKS Cluster Name'
+    required: true
+    type: string
+  helm_chart_path:
+    description: 'Path to Helm chart directory'
+    required: true
+    type: string
+  acr_secret_name:
+    description: 'Kubernetes secret for ACR'
+    required: true
+    type: string
+  harbor_ip:
+    description: 'URL of the Harbor registry to download Helm'
+    required: true
+    type: string
   harbor_username:
     description: 'Username for Harbor'
     required: true
+    type: string
   harbor_password:
     description: 'Password for Harbor'
     required: true
-  harbor_ip:
-    description: 'IP address or domain of Harbor'
-    required: true
-  chart_directory:
-    description: 'Path to the chart directory'
-    required: true
+    type: string
   chart_name:
-    description: 'Name of the Helm chart'
+    description: 'Password for Harbor'
     required: true
+    type: string
 
 runs:
-  using: 'bash'
+  using: 'composite'
   steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Install Helm
+    - name: Login to Azure with Service Principal
       run: |
-        curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+        az login --service-principal \
+          -u ${{ inputs.arm_client_id }} \
+          -p ${{ inputs.arm_client_secret }} \
+          --tenant ${{ inputs.arm_tenant_id }}
+      shell: bash
 
-    - name: Login to Harbor
+    - name: Get AKS credentials
+      run: |
+        az aks get-credentials --resource-group ${{ inputs.aks_resource_group }} --name ${{ inputs.aks_cluster_name }}
+      shell: bash
+    - name: Helm Login
       run: |
         helm registry login ${{ inputs.harbor_ip }} --username ${{ inputs.harbor_username }} --password ${{ inputs.harbor_password }}
-      
-    - name: Package Helm Chart
+      shell: bash
+
+    - name: Download Helm binary from Harbor
       run: |
-        helm package ${{ inputs.chart_name }}
-      working-directory: ${{ inputs.chart_directory }}
-    
-    - name: Push Helm Chart to Harbor
+        helm install ${{ inuts.chart_name }} oci://${{inputs.harbor_ip}}/${{inputs.harbor_username}}/${{inputs.chart_name}}
+      shell: bash
+
+    - name: Deploy with Helm
       run: |
-        helm push ${{inputs.chart_name}}-*.tgz oci://${{ inputs.harbor_ip }}/${{ inputs.harbor_username }}
-      working-directory: ${{ inputs.chart_directory }}
+        helm upgrade --install my-app ${{ inputs.helm_chart_path }} \
+          --namespace default \
+      shell: bash
+
+      # --set "image.repository=${{ inputs.acr_name }}.azurecr.io/${{ inputs.image_name }}" \
+      #     --set "image.tag=${{ inputs.image_tag }}" \
+      #     --set "image.pullSecret=${{ inputs.acr_secret_name }}"
