@@ -5,8 +5,8 @@
 # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 replicaCount: 1
 image:
-  repository: "jrochadev/backend"
-  tag: "1.0"
+  repository: ""
+  tag: ""
   pullSecret: ""
 database:
   SPRING_DB_HOST: ""
@@ -14,3 +14,4 @@ database:
   SPRING_DB_NAME: ""
   SPRING_DB_USER: ""
   SPRING_DB_PASSWORD: ""
+

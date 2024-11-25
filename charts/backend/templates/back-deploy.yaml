@@ -12,6 +12,8 @@ spec:
       labels:
         app: backend-app
     spec:
+      imagePullSecrets:    
+        - name: {{ .Values.image.pullSecret }}
       containers:
       - name: backend-app
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
