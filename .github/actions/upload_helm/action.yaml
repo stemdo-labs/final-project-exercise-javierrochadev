@@ -43,5 +43,5 @@ runs:
     - name: Push Helm Chart to Harbor
       shell: bash
       run: |
-        helm push $(ls ${inputs.chart_name}-*.tgz) oci://${{ inputs.harbor_ip }}/${{ inputs.harbor_username }}
+        helm push ${{inputs.chart_name}}-*.tgz oci://${{ inputs.harbor_ip }}/${{ inputs.harbor_username }}
       working-directory: ${{ inputs.chart_directory }}
