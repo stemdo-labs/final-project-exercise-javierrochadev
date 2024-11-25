@@ -1,5 +1,5 @@
 # .github/workflows/main-deploy.yaml
-name: Main Deployment Workflow
+name: Upload Helm Chart to Harbor
 
 on:
   workflow_dispatch:
