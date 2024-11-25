@@ -3,27 +3,17 @@
 # Declare variables to be passed into your templates.
 
 # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
-frontend:
+replicaCount: 1
+image:
+  repository: "jrochadev/mi-nginx-vue-app"
+  tag: "latest"
+  pullSecret: ""
+database:
+  SPRING_DB_HOST: ""
+  SPRING_DB_PORT: ""
+  SPRING_DB_NAME: ""
+  SPRING_DB_USER: ""
+  SPRING_DB_PASSWORD: ""
+acr:
+  dockerconfigjson: ""
 
-  replicaCount: 2
-  image:
-    repository: "jrochadev/mi-nginx-vue-app"
-    tag: "latest"
-    pullSecret: ""
-  acr:
-    dockerconfigjson: ""
-  
-  autoscaling:
-    enabled: true
-    minReplicas: 2
-    maxReplicas: 10
-    targetCPUUtilizationPercentage: 60
-  probes:
-    readinessProbe:
-      httpGet:
-        path: /healthz                                                   
-        port: 80                                                  
-      initialDelaySeconds: 10                                                                 
-      periodSeconds: 5                                  
-      timeoutSeconds: 2                                        
-      failureThreshold: 3
