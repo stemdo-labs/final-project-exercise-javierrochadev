@@ -9,13 +9,18 @@ variable "resource_group_name" {
 variable "location" {
   description = "El nombre de la localizacion de los recursos de Azure"
   type        = string
-  default     = "northeurope"
+  default     = "West Us"
 }
 
+
+# variable "replicas" {
+#   description = "El nombre de la localizacion de los recursos de Azure"
+#   type        = number
+# }
 variable "cluster_location" {
   description = "El nombre de la localizacion de los recursos de Azure"
   type        = string
-  default     = "East US"
+  default     = "North Europe"
 }
 
 variable "subnet_names" {

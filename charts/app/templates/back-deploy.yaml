@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-backend-deploy
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-backend-deploy
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-backend-deploy
+    spec:
+      containers:
+      - name: backend-app
+        image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+        envFrom:
+          - configMapRef:
+              name: {{ .Release.Name }}-backend-config
+        ports:
+          - containerPort: 8080
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.backend.probes.readinessProbe.httpGet.path }}
+            port: {{ .Values.backend.probes.readinessProbe.httpGet.port }}
+          initialDelaySeconds: {{ .Values.backend.probes.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.backend.probes.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.backend.probes.readinessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.backend.probes.readinessProbe.failureThreshold }}
+#      imagePullSecrets:
+#       - name: {{ .Values.backend.image.pullSecret | quote }}
+

@@ -1,7 +1,13 @@
 output "vnet_names" {
-  value = [for vnet in azurerm_virtual_network.vnet : vnet.name]
+  value = [
+    azurerm_virtual_network.vnet0.name,
+    azurerm_virtual_network.vnet1.name
+  ]
 }
 
 output "vnet_ids" {
-  value = [for vnet in azurerm_virtual_network.vnet : vnet.id]
+  value = [
+    azurerm_virtual_network.vnet0.id,
+    azurerm_virtual_network.vnet1.id
+  ]
 }
