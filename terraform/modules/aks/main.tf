@@ -1,6 +1,6 @@
 # Clúster de AKS
 resource "azurerm_kubernetes_cluster" "example" {
-  name                = "mi-cluster"
+  name                = "mi_cluster"
   location            = var.location
   resource_group_name = var.resource_group_name
   dns_prefix          = "micluster"

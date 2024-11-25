@@ -3,7 +3,7 @@ resource "random_id" "acr_suffix" {
 }
 
 resource "azurerm_container_registry" "acr" {
-  name                = "myacr${random_id.acr_suffix.hex}" 
+  name                = "myacrjrochadev" 
   location            = var.location                       
   resource_group_name = var.resource_group_name            
   sku                  = "Basic"                            
