@@ -1,0 +1,77 @@
+name: Backup
+ 
+on:
+  schedule:
+    - cron: '43 17 * * *'
+
+permissions:
+  pull-requests: write
+  contents: read
+ 
+jobs:
+  ansible:
+    name: Ansible Workflow
+    runs-on: self-hosted
+ 
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      TOKEN_SAS: ${{ secrets.TOKEN_SAS }}
+      PUBLIC_IP: ${{ vars.PUBLIC_IP }}
+      
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      BACKUP_DIR: ${{ vars.BACKUP_DIR }}
+
+      CONTAINER_BACKUP_NAME: ${{ secrets.CONTAINER_BACKUP_NAME }}
+      RESOURCE_GROUP_NAME: ${{ secrets.RESOURCE_GROUP_NAME }}
+      STORAGE_ACCOUNT_NAME: ${{ secrets.STORAGE_ACCOUNT_NAME }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Crear carpeta /var/backups
+        run: sudo mkdir -p /var/backups
+      - name: Set date variable
+        run: |
+          # Get current date in dd-mm-yyyy format
+          MY_DATE=$(date +'%d-%m-%Y')
+          echo "MY_DATE=$MY_DATE" >> $GITHUB_ENV
+      - name: Create inventory.ini
+        uses: ./.github/actions/create_inventory
+        with:
+          vm_bd_user: ${{ secrets.VM_BD_USER }}
+          vm_bd_pass: ${{ secrets.VM_BD_PASS }}
+          inventory_path: ./ansible/inventory.ini
+      - name: Execute Database Backup playbook
+        run: |
+          ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini db_backup.yaml
+        working-directory: ./ansible
+        env:
+          MY_DATE: ${{ env.MY_DATE }} 
+      - name: Install Azure CLI
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+ 
+      - name: Login to Azure with Service Principal
+        run: |
+          az login --service-principal \
+            -u ${{ secrets.ARM_CLIENT_ID }} \
+            -p ${{ secrets.ARM_CLIENT_SECRET }} \
+            --tenant ${{ secrets.ARM_TENANT_ID }}
+      - name: Install AzCopy
+        run: |
+          wget -O azcopy.tar.gz https://aka.ms/downloadazcopy-v10-linux
+          tar -xvf azcopy.tar.gz
+          sudo mv ./azcopy_linux_amd64_*/azcopy /usr/bin/azcopy
+          azcopy --version
+      - name: Realizar copia a azure
+        run: |
+           azcopy copy /var/backups/backup-${{ env.MY_DATE }}.sql.gz.enc https://$STORAGE_ACCOUNT_NAME.blob.core.windows.net/$CONTAINER_BACKUP_NAME/backup-${{ env.MY_DATE }}.sql.gz.enc?$TOKEN_SAS
+        working-directory: ./ansible
+        
+
+        

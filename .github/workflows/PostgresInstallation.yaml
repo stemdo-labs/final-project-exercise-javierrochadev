@@ -1,4 +1,4 @@
-name: Ansible
+name: Postgres
  
 on:
   workflow_dispatch:
@@ -38,19 +38,17 @@ jobs:
       - name: Install Ansible role
         run: |
           ansible-galaxy role install geerlingguy.postgresql
-      - name: Create inventory.ini file
-        run: |
-          echo "[database_server]" > inventory.ini
-          echo "10.0.1.4 ansible_user=${{ secrets.VM_BD_USER }} ansible_password=${{ secrets.VM_BD_PASS }}" >> inventory.ini
-        working-directory: ./ansible
+      - name: Create inventory.ini
+        uses: ./.github/actions/create_inventory
+        with:
+          vm_bd_user: ${{ secrets.VM_BD_USER }}
+          vm_bd_pass: ${{ secrets.VM_BD_PASS }}
+          inventory_path: ./ansible/inventory.ini
       - name: Execute Databse Creation playbook
         run: |
           ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini up.yaml
         working-directory: ./ansible
-      - name: Execute Database Backup playbook
-        run: |
-          ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini db_backup.yaml
-        working-directory: ./ansible
+     
 
       
      

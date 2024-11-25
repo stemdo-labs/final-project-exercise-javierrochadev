@@ -71,10 +71,9 @@ module "disk" {
 }
 
 
-
 module "vm" {
   source              = "./modules/vm"
-  disk_ids       = module.disk.disk_ids 
+  disk_ids            = module.disk.disk_ids 
   vm_config           = var.vm_config
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -94,5 +93,10 @@ module "acr" {
   source              = "./modules/acr"
   location            = var.location                 
   resource_group_name = var.resource_group_name      
+}
+
+module "blob_storage"{
+  source               = "./modules/blob"
+  storage_account_name = var.storage_account_name
 }
 

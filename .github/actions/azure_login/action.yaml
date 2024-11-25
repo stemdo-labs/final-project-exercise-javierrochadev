@@ -1,0 +1,23 @@
+name: 'Azure Login Action'
+description: 'Realiza el login en Azure con un Service Principal utilizando las credenciales de los secretos de GitHub'
+
+inputs:
+  client_id:
+    description: 'ID del cliente del Service Principal'
+    required: true
+  client_secret:
+    description: 'Secreto del cliente del Service Principal'
+    required: true
+  tenant_id:
+    description: 'ID del tenant de Azure'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Login to Azure with Service Principal
+      run: |
+        az login --service-principal \
+          -u ${{ inputs.client_id }} \
+          -p ${{ inputs.client_secret }} \
+          --tenant ${{ inputs.tenant_id }}
