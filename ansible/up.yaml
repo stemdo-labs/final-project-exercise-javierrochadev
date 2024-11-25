@@ -26,6 +26,7 @@
     - name: Agregar listen_addresses al archivo de configuración con echo
       ansible.builtin.shell: |
         echo "listen_addresses = '*'" >> /etc/postgresql/{{ postgresql_version }}/main/postgresql.conf
+      become: yes
       args:
         creates: /etc/postgresql/{{ postgresql_version }}/main/postgresql.conf
       notify: restart postgresql
