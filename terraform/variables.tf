@@ -13,10 +13,6 @@ variable "location" {
 }
 
 
-# variable "replicas" {
-#   description = "El nombre de la localizacion de los recursos de Azure"
-#   type        = number
-# }
 variable "cluster_location" {
   description = "El nombre de la localizacion de los recursos de Azure"
   type        = string
