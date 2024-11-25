@@ -4,8 +4,8 @@ metadata:
   name: {{ .Release.Name }}-backend-config
   namespace: {{ .Release.Namespace }}
 data:
-  SPRING_DB_HOST: "{{ .Values.backend.database.SPRING_DB_HOST | default "localhost" }}"
-  SPRING_DB_PORT: "{{ .Values.backend.database.SPRING_DB_PORT | default "5432" }}"
-  SPRING_DB_NAME: "{{ .Values.backend.database.SPRING_DB_NAME | default "my_database" }}"
-  SPRING_DB_USER: "{{ .Values.backend.database.SPRING_DB_USER | default "admin" }}"
-  SPRING_DB_PASSWORD: "{{ .Values.backend.database.SPRING_DB_PASSWORD | default "password" }}"
+  SPRING_DB_HOST: "{{ .Values.database.SPRING_DB_HOST | default "localhost" }}"
+  SPRING_DB_PORT: "{{ .Values.database.SPRING_DB_PORT | default "5432" }}"
+  SPRING_DB_NAME: "{{ .Values.database.SPRING_DB_NAME | default "my_database" }}"
+  SPRING_DB_USER: "{{ .Values.database.SPRING_DB_USER | default "admin" }}"
+  SPRING_DB_PASSWORD: "{{ .Values.database.SPRING_DB_PASSWORD | default "password" }}"
