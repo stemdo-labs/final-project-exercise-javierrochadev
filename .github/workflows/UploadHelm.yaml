@@ -33,14 +33,14 @@ jobs:
         harbor_password: ${{ secrets.HARBOR_PASS }}
         harbor_ip: ${{ secrets.HARBOR_IP }}
 
-    - name: Commit and Push Changes
-      uses: EndBug/add-and-commit@v9
-      with:
-        add: '.'
-        author_name: "github-actions[bot]"
-        author_email: "github-actions[bot]@users.noreply.github.com"
-        commit: '--signoff'
-        message: "Update version"
-        push: true
-        pathspec_error_handling: 'exitImmediately'
-        cwd: '.'  
+    # - name: Commit and Push Changes
+    #   uses: EndBug/add-and-commit@v9
+    #   with:
+    #     add: '.'
+    #     author_name: "github-actions[bot]"
+    #     author_email: "github-actions[bot]@users.noreply.github.com"
+    #     commit: '--signoff'
+    #     message: "Update version"
+    #     push: true
+    #     pathspec_error_handling: 'exitImmediately'
+    #     cwd: '.'  
