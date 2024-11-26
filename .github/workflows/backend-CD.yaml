@@ -118,18 +118,17 @@ jobs:
           helm registry login ${{ secrets.harbor_ip }} --username ${{ secrets.harbor_username }} --password ${{ secrets.harbor_password }}
         shell: bash
 
-      - name: Delete secret if exists
-        run: |
-          kubectl delete secret ${{secrets.acr_secret_name}} --ignore-not-found -n default
-        shell: bash
+      
 
       - name: Create Docker registry secret in default namespace
         run: |
-          kubectl create secret docker-registry ${{ secrets.acr_secret_name}} \
-            --docker-server=${{ secrets.acr_name}}.azurecr.io \
-            --docker-username=${{ secrets.arm_client_id }} \
-            --docker-password=${{ secrets.arm_client_secret }} \
-            --namespace=default
+          if ! kubectl get secrets ${{ secrets.acr_secret_name }} -n default > /dev/null 2>&1; then
+            kubectl create secret docker-registry ${{ secrets.acr_secret_name}} \
+              --docker-server=${{ secrets.acr_name}}.azurecr.io \
+              --docker-username=${{ secrets.arm_client_id }} \
+              --docker-password=${{ secrets.arm_client_secret }} \
+              --namespace=default
+          fi 
         shell: bash
 
       - name: Deploy with Helm
