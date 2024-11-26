@@ -39,7 +39,7 @@ runs:
         chmod +x upload_version.sh
       shell: bash
 
-      - id : extract_version 
+    - id : extract_version 
       name: Extract and increment version
       run: |
         NEW_VERSION=$(./extract_version.sh)
@@ -50,7 +50,7 @@ runs:
         run: |
           ./upload_version.sh ${{ inputs.chart_name }} ${{steps.extract_version.outputs.NEW_VERSION}}
         shell: bash
-        
+
     - name: Package Helm Chart
       shell: bash
       run: |
