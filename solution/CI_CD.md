@@ -1,3 +1,8 @@
+# Flujo de trabajo
+
+Se hara uso de dos reusables uno para la implementación continua y otro para el deespliegue continuo ambos seran llamados desde cada uno de los repositorios donde se encuentra el código fuente de la aplicación.
+El flujo se trata como se ve en la imagen que sigue.
+
 ![image](https://github.com/user-attachments/assets/b60b0db5-621d-45a9-83b2-5e7d30d040fc)
 
 
