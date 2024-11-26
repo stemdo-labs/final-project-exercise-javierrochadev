@@ -33,7 +33,10 @@ runs:
       shell: bash
       run: |
         helm registry login ${{ inputs.harbor_ip }} --username ${{ inputs.harbor_username }} --password ${{ inputs.harbor_password }}
-
+    - name: Extract and increment version on file
+        run: |
+          ./extract_version.sh ${{ inputs.chart_name }}
+        shell: bash
     - name: Package Helm Chart
       shell: bash
       run: |
