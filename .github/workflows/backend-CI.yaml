@@ -3,10 +3,6 @@ name: Publish Docker Image to ACR
 on:
   workflow_call:
     inputs:
-      acr_name:
-        description: "Azure Container Registry name"
-        required: true
-        type: string
       image_name:
         description: "Name of the Docker image"
         required: true
@@ -16,6 +12,11 @@ on:
         required: false
         type: string
         default: "latest"
+    secrets:
+      acr_name:
+        description: "Azure Container Registry name"
+        required: true
+        type: string
       arm_tenant_id:
         description: "Azure Tenant ID"
         required: true
@@ -44,22 +45,22 @@ jobs:
       - name: Login to Azure with Service Principal
         run: |
           az login --service-principal \
-            -u ${{ inputs.arm_client_id }} \
-            -p ${{ inputs.arm_client_secret }} \
-            --tenant ${{ inputs.arm_tenant_id }}
+            -u ${{ secrets.arm_client_id }} \
+            -p ${{ secrets.arm_client_secret }} \
+            --tenant ${{ secrets.arm_tenant_id }}
         shell: bash
         
       - name: Log in to ACR
         run: |
-          az acr login --name ${{ inputs.acr_name }}
+          az acr login --name ${{ secrets.acr_name }}
         shell: bash
         
       - name: Build Docker Image
         run: |
-          docker build -t ${{ inputs.acr_name }}.azurecr.io/${{ inputs.image_name }}:${{ inputs.image_tag }} .
+          docker build -t ${{ secrets.acr_name }}.azurecr.io/${{ inputs.image_name }}:${{ inputs.image_tag }} .
         shell: bash
         
       - name: Push Docker Image
         run: |
-          docker push ${{ inputs.acr_name }}.azurecr.io/${{ inputs.image_name }}:${{ inputs.image_tag }}
+          docker push ${{ secrets.acr_name }}.azurecr.io/${{ inputs.image_name }}:${{ inputs.image_tag }}
         shell: bash
