@@ -94,7 +94,7 @@ jobs:
         shell: bash
       - name: Delete secret if exists
         run: |
-          kubectl delete secret ${{secrets.acr_secret_name}} --ignore-not-found 
+          kubectl delete secret ${{secrets.acr_secret_name}} --ignore-not-found -n default
         shell: bash
   
       
