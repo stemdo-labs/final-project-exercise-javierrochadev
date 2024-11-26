@@ -1,0 +1,65 @@
+name: Publish Docker Image to ACR
+
+on:
+  workflow_call:
+    inputs:
+      acr_name:
+        description: "Azure Container Registry name"
+        required: true
+        type: string
+      image_name:
+        description: "Name of the Docker image"
+        required: true
+        type: string
+      image_tag:
+        description: "Tag for the Docker image"
+        required: false
+        type: string
+        default: "latest"
+      arm_tenant_id:
+        description: "Azure Tenant ID"
+        required: true
+        type: string
+      arm_client_id:
+        description: "Azure Client ID"
+        required: true
+        type: string
+      arm_client_secret:
+        description: "Azure Client Secret"
+        required: true
+        type: string
+
+jobs:
+  publish_image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        
+      - name: Install Azure CLI
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+        shell: bash
+        
+      - name: Login to Azure with Service Principal
+        run: |
+          az login --service-principal \
+            -u ${{ inputs.arm_client_id }} \
+            -p ${{ inputs.arm_client_secret }} \
+            --tenant ${{ inputs.arm_tenant_id }}
+        shell: bash
+        
+      - name: Log in to ACR
+        run: |
+          az acr login --name ${{ inputs.acr_name }}
+        shell: bash
+        
+      - name: Build Docker Image
+        run: |
+          docker build -t ${{ inputs.acr_name }}.azurecr.io/${{ inputs.image_name }}:${{ inputs.image_tag }} .
+        shell: bash
+        
+      - name: Push Docker Image
+        run: |
+          docker push ${{ inputs.acr_name }}.azurecr.io/${{ inputs.image_name }}:${{ inputs.image_tag }}
+        shell: bash
