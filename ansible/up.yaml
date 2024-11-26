@@ -9,6 +9,9 @@
       - { type: host, database: orquestas, user: myuser, address: '192.168.1.0/24', auth_method: md5 }
       - { type: host, database: all, user: all, address: '0.0.0.0/0', auth_method: md5 }
     postgresql_version: "14"
+    postgresql_global_config_options:
+      - option: listen_addresses
+        value: '*'
 
   roles:
     - role: geerlingguy.postgresql
