@@ -23,9 +23,6 @@ on:
       arm_tenant_id:
         description: 'Azure Tenant ID'
         required: true
-      arm_subscription_id:
-        description: 'Azure Subscription ID'
-        required: true
       aks_resource_group:
         description: 'Azure Resource Group of AKS'
         required: true
