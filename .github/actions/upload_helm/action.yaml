@@ -33,14 +33,28 @@ runs:
       shell: bash
       run: |
         helm registry login ${{ inputs.harbor_ip }} --username ${{ inputs.harbor_username }} --password ${{ inputs.harbor_password }}
-    #- name: Extract and increment version on file
-    #    run: |
-    #      ./extract_version.sh ${{ inputs.chart_name }}
-    #    shell: bash
+    - name: Set up permissions
+      run: |
+        chmod +x upload_version.sh
+        chmod +x upload_version.sh
+      shell: bash
+
+      - id : extract_version 
+      name: Extract and increment version
+      run: |
+        NEW_VERSION=$(./extract_version.sh)
+        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+    - name: Upload version
+        run: |
+          ./upload_version.sh ${{ inputs.chart_name }} ${{steps.extract_version.outputs.NEW_VERSION}}
+        shell: bash
+        
     - name: Package Helm Chart
       shell: bash
       run: |
-        helm package ${{ inputs.chart_name }}
+        helm package ${{ inputs.chart_name }} --version ${{steps.extract_version.outputs.NEW_VERSION}}
       working-directory: ${{ inputs.chart_directory }}
 
     - name: Push Helm Chart to Harbor
