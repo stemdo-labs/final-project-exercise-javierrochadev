@@ -10,6 +10,10 @@ on:
         description: 'Tag for the Docker image'
         required: true
         type: string
+      chart_name:
+        description: 'Name of the Helm chart'
+        required: true
+        type: string
     secrets:
       acr_name:
         description: 'Azure Container Registry name'
@@ -22,9 +26,6 @@ on:
         required: true
       arm_tenant_id:
         description: 'Azure Tenant ID'
-        required: true
-      arm_subscription_id:
-        description: 'Azure Subscription ID'
         required: true
       aks_resource_group:
         description: 'Azure Resource Group of AKS'
@@ -42,9 +43,6 @@ on:
         description: 'Username for Harbor'
         required: true
       harbor_password:
-        description: 'Password for Harbor'
-        required: true
-      chart_name:
         description: 'Password for Harbor'
         required: true
 
@@ -111,7 +109,7 @@ jobs:
   
       - name: Deploy with Helm
         run: |
-          helm upgrade --install ${{secrets.chart_name}} oci://${{secrets.harbor_ip}}/${{secrets.harbor_username}}/${{secrets.chart_name}} \
+          helm upgrade --install ${{inputs.chart_name}} oci://${{secrets.harbor_ip}}/${{secrets.harbor_username}}/${{inputs.chart_name}} \
             --namespace default \
             --set "image.repository=${{ secrets.acr_name }}.azurecr.io/${{ inputs.image_name }}" \
             --set "image.tag=${{ inputs.image_tag }}" \
