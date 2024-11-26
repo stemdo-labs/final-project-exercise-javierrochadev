@@ -1,3 +1,6 @@
+![image](https://github.com/user-attachments/assets/b60b0db5-621d-45a9-83b2-5e7d30d040fc)
+
+
 # Documentación del Workflow de CI
 
 Este flujo de trabajo de GitHub Actions automatiza la construcción y publicación de una imagen Docker en Azure Container Registry (ACR). El workflow incluye la configuración y autenticación en Azure, la construcción de la imagen Docker y su posterior publicación en ACR.

@@ -62,21 +62,18 @@ WEST US
       - IP pública y privada asignada a la interfaz de red.
     
     - **Máquina BBDD**:
-      - IP pública y privada asignada a la interfaz de red.
+      - IP privada asignada a la interfaz de red.
 
 - **Contenedor para Blob**:
   - Almacenamiento para blobs en Azure.
   - Creación de un contenedor dentro de una cuenta de almacenamiento para guardar datos.
 
-- **Azure Container Instance (ACI)**:
-  - Ejecución de contenedores sin necesidad de administrar máquinas virtuales.
-  - Se puede usar para desplegar aplicaciones o servicios de forma escalable y sin servidor.
- **Discos**:
+- **Discos**:
   - **Disco 1**: Disco asociado a la máquina de backup para almacenamiento adicional.
   - **Disco 2**: Disco asociado a la máquina de base de datos (BBDD) para almacenar datos persistentes.
 
 - **Peering de Redes**:
-  - Conexi
+  - Conexión entre ambas redes.
         
 NORTH EUROPE
 
