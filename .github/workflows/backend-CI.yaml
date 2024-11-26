@@ -16,19 +16,15 @@ on:
       acr_name:
         description: "Azure Container Registry name"
         required: true
-        type: string
       arm_tenant_id:
         description: "Azure Tenant ID"
         required: true
-        type: string
       arm_client_id:
         description: "Azure Client ID"
         required: true
-        type: string
       arm_client_secret:
         description: "Azure Client Secret"
         required: true
-        type: string
 
 jobs:
   publish_image:
