@@ -28,12 +28,12 @@
   roles:
     - role: geerlingguy.postgresql
       postgresql_databases:
-        - name: {{ postgres_db }}
+        - name: "{{ postgres_db }}"
           state: present
 
       postgresql_users:
-        - name: {{ db_user }}
-          password: {{ db_password }}
+        - name: "{{ db_user }}"
+          password: "{{ db_password }}"
           encrypted: yes
           state: present
 
