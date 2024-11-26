@@ -12,6 +12,9 @@
     postgresql_global_config_options:
       - option: listen_addresses
         value: '*'
+      - option: log_directory
+        value: '/var/log/postgresql'
+
 
   roles:
     - role: geerlingguy.postgresql
