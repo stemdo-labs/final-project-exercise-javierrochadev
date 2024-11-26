@@ -1,12 +1,12 @@
 ---
-- name: Backup
+- name: Disaster recovery
   hosts: database_server
   become: true
   vars:
     postgres_user: "postgres"
-    postgres_db: "orquestas"
+    postgres_db: "{{ lookup('env', 'DB_NAME') }}"
+    encryption_key: "{{ lookup('env', 'ENCRYPTION_KEY') }}"
     backup_file: "/var/backups/backup_recovery.sql"
-    encryption_key: "G7x!#aB12$vf@kT"
     local_backup_dir: "/var/backups/"
     
     azure_client_id: "{{ lookup('env', 'ARM_CLIENT_ID') }}"
