@@ -18,7 +18,7 @@ if [[ ! -f "$file_path" ]]; then
     exit 1
 fi
 
-# Extraer la versión actual del archivo
+# Extraer y devolver la versión actual del archivo
 current_version=$(grep -oP 'version:\s*\K[\d.]+' "$file_path")
 
 if [[ -z "$current_version" ]]; then
@@ -26,29 +26,5 @@ if [[ -z "$current_version" ]]; then
     exit 1
 fi
 
-# Separar la versión en mayor, menor y parche
-IFS='.' read -r major minor patch <<< "$current_version"
-
-# Asegurarse de que los valores sean números
-if ! [[ "$major" =~ ^[0-9]+$ ]] || ! [[ "$minor" =~ ^[0-9]+$ ]] || ! [[ "$patch" =~ ^[0-9]+$ ]]; then
-    echo "Error: La versión '$current_version' no es válida."
-    exit 1
-fi
-
-# Incrementar la versión
-if (( patch < 9 )); then
-    patch=$((patch + 1))
-elif (( minor < 9 )); then
-    patch=0
-    minor=$((minor + 1))
-else
-    patch=0
-    minor=0
-    major=$((major + 1))
-fi
-
-# Nueva versión
-new_version="${major}.${minor}.${patch}"
-
-# Devolver la nueva versión
-echo "$new_version"
+# Devolver la versión sin hacer ningún cambio
+echo "$current_version"
