@@ -1,0 +1,120 @@
+name: 'Deploy to AKS with Helm'
+on:
+  workflow_call:
+    inputs:
+      image_name:
+        description: 'Name of the Docker image'
+        required: true
+        type: string
+      image_tag:
+        description: 'Tag for the Docker image'
+        required: true
+        type: string
+    secrets:
+      acr_name:
+        description: 'Azure Container Registry name'
+        required: true
+      arm_client_id:
+        description: 'Azure Client ID'
+        required: true
+      arm_client_secret:
+        description: 'Azure Client Secret'
+        required: true
+      arm_tenant_id:
+        description: 'Azure Tenant ID'
+        required: true
+      arm_subscription_id:
+        description: 'Azure Subscription ID'
+        required: true
+      aks_resource_group:
+        description: 'Azure Resource Group of AKS'
+        required: true
+      aks_cluster_name:
+        description: 'Azure AKS Cluster Name'
+        required: true
+      acr_secret_name:
+        description: 'Kubernetes secret for ACR'
+        required: true
+      harbor_ip:
+        description: 'URL of the Harbor registry to download Helm'
+        required: true
+      harbor_username:
+        description: 'Username for Harbor'
+        required: true
+      harbor_password:
+        description: 'Password for Harbor'
+        required: true
+      chart_name:
+        description: 'Password for Harbor'
+        required: true
+
+jobs:
+  deploy:
+    runs-on: runner-stemdo-labs
+    steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install Azure CLI
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+        shell: bash
+  
+      - name: Login to Azure with Service Principal
+        run: |
+          az login --service-principal \
+            -u ${{ secrets.arm_client_id }} \
+            -p ${{ secrets.arm_client_secret }} \
+            --tenant ${{ secrets.arm_tenant_id }}
+        shell: bash
+      - name: Install kubectl using the official script
+        run: |
+          curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+          kubectl version --client
+        shell: bash
+      
+  
+      - name: Install Helm
+        shell: bash
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+  
+  
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials --resource-group ${{ secrets.aks_resource_group }} --name ${{ secrets.aks_cluster_name }}
+        shell: bash
+      - name: Log in to ACR
+        run: |
+          az acr login --name ${{ secrets.acr_name }}
+        shell: bash
+      - name: Helm Login
+        run: |
+          helm registry login ${{ secrets.harbor_ip }} --username ${{ secrets.harbor_username }} --password ${{ secrets.harbor_password }}
+        shell: bash
+      - name: Delete secret if exists
+        run: |
+          kubectl delete secret ${{secrets.acr_secret_name}} --ignore-not-found 
+        shell: bash
+  
+      
+      - name: Create Docker registry secret in default namespace
+        run: |
+          kubectl create secret docker-registry ${{ secrets.acr_secret_name}} \
+            --docker-server=*${{ secrets.acr_name}}.azurecr.io \
+            --docker-username=${{ secrets.arm_client_id }} \
+            --docker-password=${{ secrets.arm_client_secret }} \
+            --namespace=default
+        shell: bash
+  
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install ${{secrets.chart_name}} oci://${{secrets.harbor_ip}}/${{secrets.harbor_username}}/${{secrets.chart_name}} \
+            --namespace default \
+            --set "image.repository=${{ secrets.acr_name }}.azurecr.io/${{ inputs.image_name }}" \
+            --set "image.tag=${{ inputs.image_tag }}" \
+            --set "image.pullSecret=${{ secrets.acr_secret_name }}"
+        shell: bash
+          
