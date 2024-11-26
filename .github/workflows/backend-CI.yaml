@@ -1,5 +1,4 @@
-name: Publish Docker Image to ACR
-
+name: Backend CI
 on:
   workflow_call:
     inputs:
