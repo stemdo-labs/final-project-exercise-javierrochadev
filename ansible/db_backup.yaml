@@ -41,7 +41,7 @@
 
   - name: Verificar si el dump y cifrado fue exitoso
     debug:
-      msg: "Backup creado correctamente en {{ backup_file }"
+      msg: "Backup creado correctamente en {{ backup_file }}"
     when: backup_result.rc == 0
 
   - name: Crear directorio local para backups si no existe

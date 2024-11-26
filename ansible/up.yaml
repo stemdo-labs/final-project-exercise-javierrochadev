@@ -23,7 +23,6 @@
         value: '*'
       - option: log_directory
         value: '/var/log/postgresql'
-    
 
 
   roles:
@@ -53,3 +52,4 @@
   #       name: postgresql
   #       state: restarted
   #     become: yes
+

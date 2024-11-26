@@ -6,3 +6,4 @@ resource "azurerm_subnet" "subnet" {
   address_prefixes     = ["10.${count.index}.1.0/24"]  # Rango de direcciones para subnet1
 
 }
+

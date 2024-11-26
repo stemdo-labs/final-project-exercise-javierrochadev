@@ -8,15 +8,14 @@ terraform {
 }
 
 provider "azurerm" {
-
   features {}
 }
 
 
 module "vnet" {
   source              = "./modules/vnet"
-  replicas            = 2
   location            = var.location
+  cluster_location =    var.cluster_location
   resource_group_name = var.resource_group_name
 }
 
@@ -82,13 +81,13 @@ module "vm" {
 }
 
 
-# module "aks_cluster" {
-#   source              = "./modules/aks"
-#   location            = var.location
-#   resource_group_name = var.resource_group_name
-#   node_count          = 2
-#   subnet_id           = module.subnet.subnet_ids[1]
-# }
+module "aks_cluster" {
+  source              = "./modules/aks"
+  location            = var.cluster_location
+  resource_group_name = var.resource_group_name
+  node_count          = 1
+  subnet_id           = module.subnet.subnet_ids[1]
+}
 
 module "acr" {
   source              = "./modules/acr"

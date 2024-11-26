@@ -1,0 +1,27 @@
+# Default values for backend.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+replicaCount: 1
+image:
+  repository: ""
+  tag: ""
+  pullSecret: ""
+acr:
+  dockerconfigjson: ""
+autoscaling:
+   enabled: true
+   minReplicas: 2
+   maxReplicas: 10
+   targetCPUUtilizationPercentage: 60
+probes:
+  readinessProbe:
+    httpGet:
+      path: /healthz                                                   
+      port: 80                                                  
+    initialDelaySeconds: 10                                                                 
+    periodSeconds: 5                                  
+    timeoutSeconds: 2                                        
+    failureThreshold: 3
+
