@@ -30,6 +30,7 @@ jobs:
       CONTAINER_BACKUP_NAME: ${{ secrets.CONTAINER_BACKUP_NAME }}
       RESOURCE_GROUP_NAME: ${{ secrets.RESOURCE_GROUP_NAME }}
       STORAGE_ACCOUNT_NAME: ${{ secrets.STORAGE_ACCOUNT_NAME }}
+      ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
 
     steps:
       - name: Checkout code
