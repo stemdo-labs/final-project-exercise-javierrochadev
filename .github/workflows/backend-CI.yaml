@@ -32,8 +32,13 @@ on:
 
 jobs:
   publish_image:
-    runs-on: ubuntu-latest
+    runs-on: runner-stemdo-labs
     steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
       - name: Check out code
         uses: actions/checkout@v3
         
