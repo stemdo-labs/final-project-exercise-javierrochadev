@@ -139,7 +139,18 @@ El playbook utiliza un **role** predefinido (`geerlingguy.postgresql`) para gest
 Una de las tareas principales del playbook es añadir configuraciones al archivo `postgresql.conf` (como `listen_addresses`), lo que permite personalizar la instalación de PostgreSQL según las necesidades del entorno. Esta tarea utiliza un comando de shell para modificar el archivo y se ejecuta solo si el archivo aún no contiene las configuraciones necesarias.
 
 
+# Confuguracion de hosted runner
 
+Para ello debemos dirigirnos a los ajsutes de nuestro repo y clickar sobre actions > runner.
 
+![image](https://github.com/user-attachments/assets/cb1444ef-3d67-4837-ad37-b757a4b0d65e)
 
+Creamos uno neuvo.
 
+![image](https://github.com/user-attachments/assets/af75b70f-5e45-4c96-8a31-acfbf9e6b989)
+
+Copiamos el script en la maquina destino.
+
+![image](https://github.com/user-attachments/assets/a97ef01d-dc1a-48e9-8df1-2e8ceeac1204)
+
+# Ya tenemos todo listo para recibir los flows de CI / CD de las aplicaciones.
