@@ -46,8 +46,6 @@ El workflow utiliza las siguientes variables de entorno, configuradas como secre
 
 WEST US
 
-# Infraestructura de Azure
-
 - **VNet de Azure**:
   - Red virtual para la infraestructura.
   
@@ -82,8 +80,6 @@ WEST US
         
 NORTH EUROPE
 
-# Infraestructura de Azure - Red y AKS
-
 - **VNet de Azure**:
   - Red virtual para la infraestructura.
 
@@ -95,8 +91,52 @@ NORTH EUROPE
   - Proporciona orquestación de contenedores y escalabilidad automática.
   - Integración con otras soluciones de Azure, como almacenamiento y redes.
 
+# Ansible
 
+# Documentación del Playbook de Ansible para PostgreSQL
 
+Este playbook de Ansible se utiliza para configurar y gestionar una instalación de PostgreSQL en un servidor de base de datos. Configura la autenticación, las versiones, y las opciones globales de PostgreSQL, además de crear bases de datos y usuarios.
+
+## Descripción General
+
+Este playbook realiza varias configuraciones clave en el servidor PostgreSQL, tales como:
+
+1. **Configuración de la autenticación en PostgreSQL**: Se añaden entradas al archivo de configuración `pg_hba.conf` para definir cómo los usuarios pueden autenticarse.
+2. **Instalación de PostgreSQL**: Utiliza un role predefinido para instalar PostgreSQL, garantizando que esté configurado con la versión adecuada.
+3. **Configuración global de PostgreSQL**: Se definen opciones importantes como `listen_addresses` para controlar en qué direcciones IP el servidor escucha las conexiones y `log_directory` para definir la ubicación de los registros de logs de PostgreSQL.
+4. **Creación de bases de datos y usuarios**: Se asegura de que la base de datos y el usuario necesarios estén presentes en el sistema.
+5. **Modificación de los archivos de configuración**: Cambia los parámetros de configuración en el archivo `postgresql.conf` para adaptarlos a las necesidades específicas del entorno.
+6. **Reinicio del servicio de PostgreSQL**: Después de realizar los cambios de configuración, se reinicia el servicio de PostgreSQL para aplicar las modificaciones.
+
+## Descripción de las Secciones del Playbook
+
+### Hosts
+
+El playbook se ejecuta en los hosts definidos como servidores de bases de datos, especificados bajo la sección de **hosts**. Se espera que el servidor tenga PostgreSQL instalado y configurado correctamente.
+
+### Privilegios de Ejecución
+
+El playbook está configurado para ejecutarse con privilegios elevados (es decir, con `sudo` o `become: yes`), lo que es necesario para poder modificar archivos de configuración del sistema y reiniciar servicios.
+
+### Variables
+
+El playbook utiliza variables que se deben configurar adecuadamente en el entorno de ejecución. Estas variables incluyen, entre otras:
+
+- **Autenticación de PostgreSQL**: Se definen múltiples entradas para el archivo `pg_hba.conf`, especificando qué usuarios pueden acceder a qué bases de datos y qué método de autenticación utilizar.
+- **Versión de PostgreSQL**: La versión de PostgreSQL que debe instalarse y configurarse.
+- **Opciones de configuración global**: Incluye parámetros como `listen_addresses` para permitir conexiones desde cualquier dirección IP y `log_directory` para especificar la ubicación de los archivos de log.
+
+### Roles
+
+El playbook utiliza un **role** predefinido (`geerlingguy.postgresql`) para gestionar la instalación y configuración de PostgreSQL. Este role permite:
+
+- Crear bases de datos necesarias, como una base de datos específica.
+- Crear usuarios de PostgreSQL con sus respectivas contraseñas, asegurando que el sistema esté correctamente configurado desde el principio.
+
+[Documentacion del role](https://galaxy.ansible.com/ui/standalone/roles/geerlingguy/postgresql/documentation/)
+### Tareas
+
+Una de las tareas principales del playbook es añadir configuraciones al archivo `postgresql.conf` (como `listen_addresses`), lo que permite personalizar la instalación de PostgreSQL según las necesidades del entorno. Esta tarea utiliza un comando de shell para modificar el archivo y se ejecuta solo si el archivo aún no contiene las configuraciones necesarias.
 
 
 
