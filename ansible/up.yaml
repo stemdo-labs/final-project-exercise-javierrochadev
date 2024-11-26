@@ -11,11 +11,11 @@
     
     azure_client_id: "{{ lookup('env', 'ARM_CLIENT_ID') }}"
     postgresql_hba_entries:
-      - { type: local, database: all, user: {{ postgres_user }}, auth_method: md5 }
+      - { type: local, database: all, user: '{{ postgres_user }}', auth_method: md5 }
       - { type: local, database: all, user: all, auth_method: md5 }
-      - { type: host, database: all, user: {{ db_user }}, address: '127.0.0.1/32', auth_method: md5 }
-      - { type: host, database: all, user: {{ db_user }}, address: '::1/128', auth_method: md5 }
-      - { type: host, database: {{ postgres_db }}, user: {{ db_user }}, address: '192.168.1.0/24', auth_method: md5 }
+      - { type: host, database: all, user: '{{ db_user }}', address: '127.0.0.1/32', auth_method: md5 }
+      - { type: host, database: all, user: '{{ db_user }}', address: '::1/128', auth_method: md5 }
+      - { type: host, database: '{{ postgres_db }}', user: '{{ db_user }}', address: '192.168.1.0/24', auth_method: md5 }
       - { type: host, database: all, user: all, address: '0.0.0.0/0', auth_method: md5 }
     postgresql_version: "14"
     postgresql_global_config_options:
@@ -52,4 +52,3 @@
   #       name: postgresql
   #       state: restarted
   #     become: yes
-
