@@ -50,7 +50,5 @@ fi
 # Nueva versión
 new_version="${major}.${minor}.${patch}"
 
-# Reemplazar la versión en el archivo
-sed -i "s/version:\s*[0-9]*\.[0-9]*\.[0-9]*/version: $new_version/" "$file_path"
-
-echo "Versión actualizada de '$current_version' a '$new_version' en el archivo '$file_path'."
+# Devolver la nueva versión
+echo "$new_version"
