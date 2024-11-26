@@ -1,4 +1,4 @@
-name: 'Deploy to AKS with Helm'
+name: 'Frontend CI'
 on:
   workflow_call:
     inputs:
