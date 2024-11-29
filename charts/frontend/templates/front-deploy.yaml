@@ -1,22 +1,23 @@
+                                                                                         
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-frontend-app
-  namespace: {{ .Release.Namespace }}
+  - name: "{{ .Release.Name }}-frontend-app"
+  - namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-frontend-app
+      app: "{{ .Release.Name }}-frontend-app"
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-frontend-app
+        app: "{{ .Release.Name }}-frontend-app"
     spec:
-      imagePullSecrets:    
+      imagePullSecrets:
         - name: {{ .Values.image.pullSecret }}
       containers:
-      - name: {{ .Release.Name }}-frontend-app
+      - name: "{{ .Release.Name }}-frontend-app"
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         ports:
         - containerPort: 80
@@ -28,3 +29,4 @@ spec:
           periodSeconds: {{ .Values.probes.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.probes.readinessProbe.timeoutSeconds }}
           failureThreshold: {{ .Values.probes.readinessProbe.failureThreshold }}
+
