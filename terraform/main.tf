@@ -13,41 +13,41 @@ provider "azurerm" {
 }
 
 
-module "vnet" {
-  source              = "./modules/vnet"
-  location            = var.location
-  cluster_location =    var.cluster_location
-  resource_group_name = var.resource_group_name
-}
+# module "vnet" {
+#   source              = "./modules/vnet"
+#   location            = var.location
+#   cluster_location =    var.cluster_location
+#   resource_group_name = var.resource_group_name
+# }
 
 # Crear peering entre las dos redes virtuales
-module "peering" {
-  source                    = "./modules/peering"
-  replicas                  = length(module.vnet.vnet_names)
-  vnet_names                = module.vnet.vnet_names
-  vnet_ids                  = reverse(module.vnet.vnet_ids)
-  resource_group_name       = var.resource_group_name
-}
+# module "peering" {
+#   source                    = "./modules/peering"
+#   replicas                  = length(module.vnet.vnet_names)
+#   vnet_names                = module.vnet.vnet_names
+#   vnet_ids                  = reverse(module.vnet.vnet_ids)
+#   resource_group_name       = var.resource_group_name
+# }
 
 
-module "nsg" {
-  replicas            = 2
-  source              = "./modules/nsg"
-  subnet_names        = var.subnet_names
-  location            = var.location
-  resource_group_name = var.resource_group_name
+# module "nsg" {
+#   replicas            = 2
+#   source              = "./modules/nsg"
+#   subnet_names        = var.subnet_names
+#   location            = var.location
+#   resource_group_name = var.resource_group_name
+# 
+# }
 
-}
-
-module "subnet" {
-  source               = "./modules/subnet"
-  replicas             = 2
-  subnet_names         = var.subnet_names
-  vnet_names           = module.vnet.vnet_names        
-  resource_group_name  = var.resource_group_name
-
-  # network_security_group_ids = module.nsg.nsg_ids
-}
+# module "subnet" {
+#   source               = "./modules/subnet"
+#   replicas             = 2
+#   subnet_names         = var.subnet_names
+#   vnet_names           = module.vnet.vnet_names        
+#   resource_group_name  = var.resource_group_name
+# 
+#   # network_security_group_ids = module.nsg.nsg_ids
+# }
 
 module "public_ip" {
   source              = "./modules/public_ip"
@@ -60,7 +60,7 @@ module "vm_nic" {
   vm_config           = var.vm_config
   location            = var.location
   resource_group_name = var.resource_group_name
-  subnet_id           = module.subnet.subnet_ids[0]
+  subnet_id           = var.subnet_production_id
   public_ip_id        = module.public_ip.id
 }
 
@@ -82,13 +82,13 @@ module "vm" {
 }
 
 
-module "aks_cluster" {
-  source              = "./modules/aks"
-  location            = var.cluster_location
-  resource_group_name = var.resource_group_name
-  node_count          = 1
-  subnet_id           = module.subnet.subnet_ids[1]
-}
+# module "aks_cluster" {
+#   source              = "./modules/aks"
+#   location            = var.cluster_location
+#   resource_group_name = var.resource_group_name
+#   node_count          = 1
+#   subnet_id           = module.subnet.subnet_ids[1]
+# }
 
 module "acr" {
   source              = "./modules/acr"

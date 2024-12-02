@@ -1,5 +1,10 @@
 
 
+variable "subnet_production_id" {
+  description = "El id de la red virtual de el cluster"
+  type        = string
+}
+
 variable "resource_group_name" {
   description = "El nombre del grupo de recursos de Azure"
   type        = string
@@ -9,7 +14,7 @@ variable "resource_group_name" {
 variable "location" {
   description = "El nombre de la localizacion de los recursos de Azure"
   type        = string
-  default     = "West Us"
+  default     = "UK South"
 }
 
 
@@ -57,7 +62,7 @@ variable "vm_config" {
  default = {
   0 = {
     public_ip      = false
-    private_ip     = "10.0.1.4"
+    private_ip     = "10.0.33.4"
     name           = "vm-bd"
     vm_size        = "Standard_B1ms"
     admin_username = "adminuser1"
@@ -72,7 +77,7 @@ variable "vm_config" {
   },
   1 = {
     public_ip      = true
-    private_ip     = "10.0.1.5"
+    private_ip     = "10.0.33.5"
     name           = "vm-backup"
     vm_size        = "Standard_B1ms"
     admin_username = "adminuser2"
