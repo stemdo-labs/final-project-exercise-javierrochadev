@@ -122,12 +122,12 @@ jobs:
 
       - name: Create Docker registry secret in default namespace
         run: |
-          if ! kubectl get secrets ${{ secrets.acr_secret_name }} -n default > /dev/null 2>&1; then
+          if ! kubectl get secrets ${{ secrets.acr_secret_name }} -n ${{ vars.NAMESPACE}} > /dev/null 2>&1; then
             kubectl create secret docker-registry ${{ secrets.acr_secret_name}} \
               --docker-server=${{ secrets.acr_name}}.azurecr.io \
               --docker-username=${{ secrets.arm_client_id }} \
               --docker-password=${{ secrets.arm_client_secret }} \
-              --namespace=default
+              --namespace=${{ vars.NAMESPACE}} 
           fi 
         shell: bash
 
@@ -135,7 +135,7 @@ jobs:
         run: |
           helm upgrade --install ${{inputs.chart_name}} oci://${{secrets.harbor_ip}}/${{secrets.harbor_username}}/${{inputs.chart_name}} \
             -f custom_values.yaml \
-            --namespace default \
+            --namespace ${{ vars.NAMESPACE}}  \
             --set "database.SPRING_DB_NAME=${{ secrets.db_name }}" \
             --set "database.SPRING_DB_USER=${{ secrets.db_user }}" \
             --set "database.SPRING_DB_PASSWORD=${{ secrets.db_pass }}" \
