@@ -59,7 +59,7 @@ jobs:
       #   uses: actions/setup-node@v4
       #   with:
       #     node-version: '20'
-        uses: actions/checkout@v3
+      #  uses: actions/checkout@v3
       - name: Install Azure CLI
         run: |
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
