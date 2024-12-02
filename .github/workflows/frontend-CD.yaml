@@ -91,7 +91,7 @@ jobs:
   
       - name: Get AKS credentials
         run: |
-          az account set --subscription ${{ serets.arm_subscription_id}}
+          az account set --subscription ${{ secrets.arm_subscription_id}}
           az aks get-credentials --resource-group ${{ secrets.aks_resource_group }} --name ${{ secrets.aks_cluster_name }} --overwrite-existing
           kubelogin convert-kubeconfig -l azurecli
         shell: bash
