@@ -31,6 +31,9 @@ on:
       arm_tenant_id:
         description: 'Azure Tenant ID'
         required: true
+      arm_subscription_id:
+        description: 'Azure Tenant ID'
+        required: true
       aks_resource_group:
         description: 'Azure Resource Group of AKS'
         required: true
@@ -88,7 +91,9 @@ jobs:
   
       - name: Get AKS credentials
         run: |
-          az aks get-credentials --resource-group ${{ secrets.aks_resource_group }} --name ${{ secrets.aks_cluster_name }}
+          az account set --subscription ${{ serets.arm_subscription_id}}
+          az aks get-credentials --resource-group ${{ secrets.aks_resource_group }} --name ${{ secrets.aks_cluster_name }} --overwrite-existing
+          kubelogin convert-kubeconfig -l azurecli
         shell: bash
       - name: Log in to ACR
         run: |
