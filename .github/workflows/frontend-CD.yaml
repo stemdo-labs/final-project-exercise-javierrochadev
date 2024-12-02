@@ -1,5 +1,3 @@
-
-
 name: 'Frontend CD'
 on:
   workflow_call:
@@ -109,8 +107,8 @@ jobs:
       - name: Deploy with Helm
         run: |
           helm upgrade --install ${{inputs.chart_name}} oci://${{secrets.harbor_ip}}/${{secrets.harbor_username}}/${{inputs.chart_name}} \
+            -f custom_values.yaml
             --namespace default \
-            --set "image.repository=${{ secrets.acr_name }}.azurecr.io/${{ inputs.image_name }}" \
             --set "image.tag=${{ inputs.image_tag }}" \
             --set "image.pullSecret=${{ secrets.acr_secret_name }}"
         shell: bash

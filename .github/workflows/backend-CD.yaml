@@ -134,13 +134,11 @@ jobs:
       - name: Deploy with Helm
         run: |
           helm upgrade --install ${{inputs.chart_name}} oci://${{secrets.harbor_ip}}/${{secrets.harbor_username}}/${{inputs.chart_name}} \
+            -f custom_values.yaml \
             --namespace default \
-            --set "database.SPRING_DB_HOST=${{ secrets.db_host }}" \
-            --set "database.SPRING_DB_PORT=${{ secrets.db_port }}" \
             --set "database.SPRING_DB_NAME=${{ secrets.db_name }}" \
             --set "database.SPRING_DB_USER=${{ secrets.db_user }}" \
             --set "database.SPRING_DB_PASSWORD=${{ secrets.db_pass }}" \
-            --set "image.repository=${{ secrets.acr_name }}.azurecr.io/${{ inputs.image_name }}" \
             --set "image.tag=${{ inputs.image_tag }}" \
             --set "image.pullSecret=${{ secrets.acr_secret_name }}"
         shell: bash

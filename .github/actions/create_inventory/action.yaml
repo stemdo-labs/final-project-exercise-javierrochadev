@@ -19,5 +19,5 @@ runs:
     - name: Create inventory.ini file
       run: |
         echo "[database_server]" > ${{ inputs.inventory_path }}
-        echo "10.0.1.4 ansible_user=${{ inputs.vm_bd_user }} ansible_password=${{ inputs.vm_bd_pass }}" >> ${{ inputs.inventory_path }}
+        echo "10.0.33.4 ansible_user=${{ inputs.vm_bd_user }} ansible_password=${{ inputs.vm_bd_pass }}" >> ${{ inputs.inventory_path }}
       shell: bash
