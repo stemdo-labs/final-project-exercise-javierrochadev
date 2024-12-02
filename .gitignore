@@ -1,5 +1,6 @@
 # Ignorar archivos y carpetas de Terraform
 *.tfstate
+*.tfvars
 *.tfstate.*
 *.tfvars
 .terraform/
