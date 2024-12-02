@@ -9,9 +9,9 @@ replicaCount: 1  # Número de pods que se desplegarán para esta aplicación
 # Configuración de la imagen
 # Estos valores definen la imagen Docker que se usará para la aplicación backend
 image:
-  repository: ""  # El repositorio de Docker (por ejemplo, "myrepo/myapp")
-  tag: ""         # La etiqueta de la imagen Docker (por ejemplo, "latest", "v1.0.0")
-  pullSecret: ""  # Opcional: Secreto de Kubernetes para obtener la imagen de un repositorio privado (por ejemplo, "my-secret")
+  repository: "myacrcontainer.azuere.io/myimage"  # El repositorio de Docker (por ejemplo, "myrepo/myapp")
+  tag: "latest"         # La etiqueta de la imagen Docker (por ejemplo, "latest", "v1.0.0")
+  pullSecret: "mypullsecret"  # Opcional: Secreto de Kubernetes para obtener la imagen de un repositorio privado (por ejemplo, "my-secret")
 
 # Configuración de Azure Container Registry (ACR)
 # Esto se utiliza para autenticar y obtener imágenes del Registro de Contenedores de Azure
