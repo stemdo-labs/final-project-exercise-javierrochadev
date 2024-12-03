@@ -119,8 +119,7 @@ jobs:
 
       - name: listar
         run: |
-          ls ./
-          ls ./chart
+          ls /
         shell: bash
         
   
