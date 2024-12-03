@@ -113,7 +113,7 @@ jobs:
               --docker-server=${{ secrets.acr_name}}.azurecr.io \
               --docker-username=${{ secrets.arm_client_id }} \
               --docker-password=${{ secrets.arm_client_secret }} \
-              --namespace=${{ inputs.namespace }}
+              --namespace=ns-jrocha
           fi 
         shell: bash
         
