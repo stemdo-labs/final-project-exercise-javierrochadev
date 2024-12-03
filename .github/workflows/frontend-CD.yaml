@@ -63,6 +63,8 @@ jobs:
       #   with:
       #     node-version: '20'
       #  uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
       - name: Install Azure CLI
         run: |
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
@@ -106,6 +108,11 @@ jobs:
         run: |
           helm registry login ${{ secrets.harbor_ip }} --username ${{ secrets.harbor_username }} --password ${{ secrets.harbor_password }}
         shell: bash
+      - name: Helm Login
+        run: |
+          docker pull ${{ secrets.acr_name}}.azurecr.io/myapp-frontend:${{ inputs.image_tag }}
+        shell: bash
+
       - name: Create Docker registry secret in default namespace
         run: |
           if ! kubectl get secrets ${{ secrets.acr_secret_name }} -n ns-jrocha > /dev/null 2>&1; then
