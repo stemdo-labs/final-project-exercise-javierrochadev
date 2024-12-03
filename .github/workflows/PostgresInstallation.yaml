@@ -31,9 +31,9 @@ jobs:
         
       - name: Install Ansible and sshpass
         run: |
-          sudo apt update -y
-          sudo apt install ansible -y
-          sudo apt install sshpass -y
+          apt update -y
+          apt install ansible -y
+          apt install sshpass -y
 
       - name: Install Ansible role
         run: |
