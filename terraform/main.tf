@@ -66,7 +66,7 @@ module "vm_nic" {
 
 module "disk" {
   source               = "./modules/disc"
-  replicas             = 2
+  replicas             = 1
   location             = var.location
   resource_group_name  = var.resource_group_name
 }

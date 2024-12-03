@@ -61,7 +61,7 @@ variable "vm_config" {
 
  default = {
   0 = {
-    public_ip      = false
+    public_ip      = true
     private_ip     = "10.0.33.4"
     name           = "vm-bd"
     vm_size        = "Standard_B1ms"
@@ -75,21 +75,21 @@ variable "vm_config" {
 
 
   },
-  1 = {
-    public_ip      = true
-    private_ip     = "10.0.33.5"
-    name           = "vm-backup"
-    vm_size        = "Standard_B1ms"
-    admin_username = "adminuser2"
-    admin_password = "P@ssw0rd5678!"
-    subnet_name    = "subnet2"
-    os_publisher = "Canonical"
-    os_offer     = "0001-com-ubuntu-server-jammy"
-    os_sku       = "22_04-lts"
-    os_version   = "latest"
-
-
-  }
+  # 1 = {
+  #   public_ip      = true
+  #   private_ip     = "10.0.33.5"
+  #   name           = "vm-backup"
+  #   vm_size        = "Standard_B1ms"
+  #   admin_username = "adminuser2"
+  #   admin_password = "P@ssw0rd5678!"
+  #   subnet_name    = "subnet2"
+  #   os_publisher = "Canonical"
+  #   os_offer     = "0001-com-ubuntu-server-jammy"
+  #   os_sku       = "22_04-lts"
+  #   os_version   = "latest"
+# 
+# 
+  # }
 }
 
 }
