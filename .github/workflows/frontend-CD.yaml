@@ -116,6 +116,12 @@ jobs:
               --namespace=ns-jrocha
           fi 
         shell: bash
+
+      - name: listar
+        run: |
+          ls ./
+          ls ./chart
+        shell: bash
         
   
       - name: Deploy with Helm
