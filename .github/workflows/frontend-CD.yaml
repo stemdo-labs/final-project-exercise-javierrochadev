@@ -119,7 +119,7 @@ jobs:
 
       - name: listar
         run: |
-          ls /
+          ls ./
         shell: bash
         
   
