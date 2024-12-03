@@ -136,12 +136,12 @@ jobs:
 
       - name: Create Docker registry secret in default namespace
         run: |
-          if ! kubectl get secrets ${{ secrets.acr_secret_name }} -n ${{ inputs.namespace}} > /dev/null 2>&1; then
+          if ! kubectl get secrets ${{ secrets.acr_secret_name }} -n ns-jrocha > /dev/null 2>&1; then
             kubectl create secret docker-registry ${{ secrets.acr_secret_name}} \
               --docker-server=${{ secrets.acr_name}}.azurecr.io \
               --docker-username=${{ secrets.arm_client_id }} \
               --docker-password=${{ secrets.arm_client_secret }} \
-              --namespace=${{ inputs.namespace}}
+              --namespace=ns-jrocha
           fi 
         shell: bash
 
