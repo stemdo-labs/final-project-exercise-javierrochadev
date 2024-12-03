@@ -148,7 +148,7 @@ jobs:
       - name: Deploy with Helm
         run: |
           helm upgrade --install ${{inputs.chart_name}} oci://${{secrets.harbor_ip}}/${{secrets.harbor_username}}/${{inputs.chart_name}} \
-            -f custom_values.yaml \
+            -f ./charts/custom_values.yaml \
             --namespace ${{ inputs.namespace}} \
             --set "database.SPRING_DB_HOST=${{ secrets.db_host }}" \
             --set "database.SPRING_DB_NAME=${{ secrets.db_name }}" \
