@@ -149,7 +149,7 @@ jobs:
         run: |
           helm upgrade --install ${{inputs.chart_name}} oci://${{secrets.harbor_ip}}/${{secrets.harbor_username}}/${{inputs.chart_name}} \
             -f ./chart/custom_values.yaml \
-            --namespace ${{ inputs.namespace}} \
+            --namespace ns-jrocha \
             --set "database.SPRING_DB_HOST=${{ secrets.db_host }}" \
             --set "database.SPRING_DB_NAME=${{ secrets.db_name }}" \
             --set "database.SPRING_DB_USER=${{ secrets.db_user }}" \
