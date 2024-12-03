@@ -31,6 +31,7 @@ jobs:
       RESOURCE_GROUP_NAME: ${{ secrets.RESOURCE_GROUP_NAME }}
       STORAGE_ACCOUNT_NAME: ${{ secrets.STORAGE_ACCOUNT_NAME }}
       ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+      DATABASE_IP: ${{ secrets.DATABASE_IP }}
 
     steps:
       - name: Checkout code
@@ -48,6 +49,7 @@ jobs:
           vm_bd_user: ${{ secrets.VM_BD_USER }}
           vm_bd_pass: ${{ secrets.VM_BD_PASS }}
           inventory_path: ./ansible/inventory.ini
+          database_ip: ${{ secrets.DATABASE_IP }}
       - name: Execute Database Backup playbook
         run: |
           ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini db_backup.yaml
