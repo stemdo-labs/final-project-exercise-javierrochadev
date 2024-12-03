@@ -90,7 +90,7 @@ jobs:
       - name: Install aks cli
         shell: bash
         run: |
-          az aks install-cli
+          sudo az aks install-cli
   
       - name: Get AKS credentials
         run: |
