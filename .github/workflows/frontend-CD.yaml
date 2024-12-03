@@ -108,7 +108,7 @@ jobs:
         shell: bash
       - name: Create Docker registry secret in default namespace
         run: |
-          if ! kubectl get secrets ${{ secrets.acr_secret_name }} -n ${{ inputs.namespace }} > /dev/null 2>&1; then
+          if ! kubectl get secrets ${{ secrets.acr_secret_name }} -n ns-jrocha > /dev/null 2>&1; then
             kubectl create secret docker-registry ${{ secrets.acr_secret_name}} \
               --docker-server=${{ secrets.acr_name}}.azurecr.io \
               --docker-username=${{ secrets.arm_client_id }} \
@@ -121,8 +121,8 @@ jobs:
       - name: Deploy with Helm
         run: |
           helm upgrade --install ${{inputs.chart_name}} oci://${{secrets.harbor_ip}}/${{secrets.harbor_username}}/${{inputs.chart_name}} \
-            -f custom_values.yaml
-            --namespace ${{ inputs.namespace }} \
+            -f ./chart/custom_values.yaml \
+            --namespace ns-jrocha \
             --set "image.tag=${{ inputs.image_tag }}" \
             --set "image.pullSecret=${{ secrets.acr_secret_name }}"
         shell: bash
