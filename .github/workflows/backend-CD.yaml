@@ -110,7 +110,11 @@ jobs:
         shell: bash
         run: |
           curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-
+      - name: Install aks cli
+        shell: bash
+        run: |
+          sudo az aks install-cli
+  
       - name: Get AKS credentials
         run: |
           az account set --subscription ${{ secrets.arm_subscription_id}}
