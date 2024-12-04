@@ -62,9 +62,10 @@ jobs:
       #   uses: actions/setup-node@v4
       #   with:
       #     node-version: '20'
-      #  uses: actions/checkout@v3
+
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Install Azure CLI
         run: |
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
@@ -77,18 +78,19 @@ jobs:
             -p ${{ secrets.arm_client_secret }} \
             --tenant ${{ secrets.arm_tenant_id }}
         shell: bash
+
       - name: Install kubectl using the official script
         run: |
           curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
           kubectl version --client
         shell: bash
-      
   
       - name: Install Helm
         shell: bash
         run: |
           curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+          
       - name: Install aks cli
         shell: bash
         run: |
@@ -100,17 +102,10 @@ jobs:
           az aks get-credentials --resource-group ${{ secrets.aks_resource_group }} --name ${{ secrets.aks_cluster_name }} --overwrite-existing
           kubelogin convert-kubeconfig -l azurecli
         shell: bash
-      - name: Log in to ACR
-        run: |
-          az acr login --name ${{ secrets.acr_name }}
-        shell: bash
+      
       - name: Helm Login
         run: |
           helm registry login ${{ secrets.harbor_ip }} --username ${{ secrets.harbor_username }} --password ${{ secrets.harbor_password }}
-        shell: bash
-      - name: Helm Login
-        run: |
-          docker pull ${{ secrets.acr_name}}.azurecr.io/myapp-frontend:${{ inputs.image_tag }}
         shell: bash
 
       - name: Create Docker registry secret in default namespace
@@ -124,12 +119,6 @@ jobs:
           fi 
         shell: bash
 
-      - name: listar
-        run: |
-          ls ./
-        shell: bash
-        
-  
       - name: Deploy with Helm
         run: |
           helm upgrade --install ${{inputs.chart_name}} oci://${{secrets.harbor_ip}}/${{secrets.harbor_username}}/${{inputs.chart_name}} \

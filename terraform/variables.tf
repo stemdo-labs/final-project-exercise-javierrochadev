@@ -11,18 +11,20 @@ variable "resource_group_name" {
   default     = "rg-jrocha-dvfinlab" 
 }
 
+variable "subnet_production_id" {
+  description = "El nombre del grupo de recursos de Azure"
+  type        = string
+  default     = "UK South"
+}
+
+
+
 variable "location" {
   description = "El nombre de la localizacion de los recursos de Azure"
   type        = string
   default     = "UK South"
 }
 
-
-variable "cluster_location" {
-  description = "El nombre de la localizacion de los recursos de Azure"
-  type        = string
-  default     = "North Europe"
-}
 
 variable "subnet_names" {
   description = "Los nombres de las dubredes de Azure"
@@ -68,12 +70,10 @@ variable "vm_config" {
     admin_username = "adminuser1"
     admin_password = "P@ssw0rd1234!"
     subnet_name    = "subnet1"
-    os_publisher = "Canonical"
-    os_offer     = "0001-com-ubuntu-server-jammy"
-    os_sku       = "22_04-lts"
-    os_version   = "latest"
-
-
+    os_publisher   = "Canonical"
+    os_offer       = "0001-com-ubuntu-server-jammy"
+    os_sku         = "22_04-lts"      # Ubuntu 18.04 LTS Desktop
+    os_version     = "latest"
   },
   # 1 = {
   #   public_ip      = true
@@ -87,9 +87,10 @@ variable "vm_config" {
   #   os_offer     = "0001-com-ubuntu-server-jammy"
   #   os_sku       = "22_04-lts"
   #   os_version   = "latest"
-# 
-# 
-  # }
 }
 
 }
+
+
+
+        
