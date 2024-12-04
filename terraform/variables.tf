@@ -1,15 +1,17 @@
 
 
-variable "subnet_production_id" {
-  description = "El id de la red virtual de el cluster"
-  type        = string
-}
-
 variable "resource_group_name" {
   description = "El nombre del grupo de recursos de Azure"
   type        = string
   default     = "rg-jrocha-dvfinlab" 
 }
+
+variable "subnet_production_id" {
+  description = "El nombre del grupo de recursos de Azure"
+  type        = string
+}
+
+
 
 variable "location" {
   description = "El nombre de la localizacion de los recursos de Azure"
@@ -17,12 +19,6 @@ variable "location" {
   default     = "UK South"
 }
 
-
-variable "cluster_location" {
-  description = "El nombre de la localizacion de los recursos de Azure"
-  type        = string
-  default     = "North Europe"
-}
 
 variable "subnet_names" {
   description = "Los nombres de las dubredes de Azure"
@@ -68,28 +64,28 @@ variable "vm_config" {
     admin_username = "adminuser1"
     admin_password = "P@ssw0rd1234!"
     subnet_name    = "subnet1"
-    os_publisher = "Canonical"
-    os_offer     = "0001-com-ubuntu-server-jammy"
-    os_sku       = "22_04-lts"
-    os_version   = "latest"
-
-
+    os_publisher   = "Canonical"
+    os_offer       = "0001-com-ubuntu-server-jammy"
+    os_sku         = "22_04-lts"      # Ubuntu 18.04 LTS Desktop
+    os_version     = "latest"
   },
   # 1 = {
   #   public_ip      = true
-  #   private_ip     = "10.0.33.5"
+  #   private_ip     = "10.0.1.5"
   #   name           = "vm-backup"
   #   vm_size        = "Standard_B1ms"
   #   admin_username = "adminuser2"
   #   admin_password = "P@ssw0rd5678!"
   #   subnet_name    = "subnet2"
-  #   os_publisher = "Canonical"
-  #   os_offer     = "0001-com-ubuntu-server-jammy"
-  #   os_sku       = "22_04-lts"
-  #   os_version   = "latest"
-# 
-# 
+  #   os_publisher   = "Canonical"
+  #   os_offer       = "UbuntuServer"
+  #   os_sku         = "22.04-LTS"      # Ubuntu 18.04 LTS Desktop
+  #   os_version     = "latest"
   # }
 }
 
 }
+
+
+
+        
