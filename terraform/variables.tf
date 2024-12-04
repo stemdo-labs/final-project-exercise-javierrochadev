@@ -11,8 +11,6 @@ variable "subnet_production_id" {
   type        = string
 }
 
-
-
 variable "location" {
   description = "El nombre de la localizacion de los recursos de Azure"
   type        = string
