@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  - name: "{{ .Release.Name }}-backend-config"
-  - namespace: {{ .Release.Namespace }}
+  name: "{{ .Release.Name }}-backend-config"
+  namespace: {{ .Release.Namespace }}
 data:
   SPRING_DB_HOST: "{{ .Values.database.SPRING_DB_HOST }}"
   SPRING_DB_PORT: "{{ .Values.database.SPRING_DB_PORT }}"
