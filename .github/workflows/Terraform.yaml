@@ -74,17 +74,17 @@ jobs:
 
       - name: Terraform Plan
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'plan' || github.event_name == 'pull_request' }}
-        run: terraform plan
+        run: terraform plan -var="subnet_production_id=${{ secrets.SUBNET_PRODUCTION_ID }}"
         working-directory: ./terraform
 
       - name: Terraform Apply
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'apply' || github.event_name == 'push' }}
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var="subnet_production_id=${{ secrets.SUBNET_PRODUCTION_ID }}"
         working-directory: ./terraform
 
       - name: Terraform Destroy
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy' }}
-        run: terraform destroy -auto-approve
+        run: terraform destroy -auto-approve -var="subnet_production_id=${{ secrets.SUBNET_PRODUCTION_ID }}"
         working-directory: ./terraform
 
       - name: Terraform State List
