@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-frontend-service  # Nombre del Service con el prefijo del release
+  - name: "{{ .Release.Name }}-frontend-service"
+  - namespace: {{ .Release.Namespace }}
 spec:
   selector:
-    app: {{ .Release.Name }}-frontend-deploy  # Asegúrate de que coincida con la etiqueta del Deployment
+    app: "{{ .Release.Name }}-frontend-app"
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
-      # nodePort: 30055
   type: LoadBalancer

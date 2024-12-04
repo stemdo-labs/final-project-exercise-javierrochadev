@@ -1,0 +1,58 @@
+---
+- name: Backup
+  hosts: database_server
+  become: true
+  vars:
+
+    postgres_user: "postgres"
+    postgres_db: "{{ lookup('env', 'DB_NAME') }}"
+    encryption_key: "{{ lookup('env', 'ENCRYPTION_KEY') }}"
+
+    local_backup_dir: "/var/backups/"
+    
+    azure_client_id: "{{ lookup('env', 'ARM_CLIENT_ID') }}"
+    azure_client_secret: "{{ lookup('env', 'ARM_CLIENT_SECRET') }}"
+    azure_subscription_id: "{{ lookup('env', 'ARM_SUBSCRIPTION_ID') }}"
+    azure_tenant_id: "{{ lookup('env', 'ARM_TENANT_ID') }}"
+    public_ip: "{{ lookup('env', 'PUBLIC_IP') }}"
+    db_name: "{{ lookup('env', 'DB_NAME') }}"
+    db_user: "{{ lookup('env', 'DB_USER') }}"
+    db_password: "{{ lookup('env', 'DB_PASSWORD') }}"
+    backup_dir: "{{ lookup('env', 'BACKUP_DIR') }}"
+
+    RESOURCE_GROUP_NAME: "{{ lookup('env', 'RESOURCE_GROUP_NAME') }}"
+    STORAGE_ACCOUNT_NAME: "{{ lookup('env', 'STORAGE_ACCOUNT_NAME') }}"
+    CONTAINER_BACKUP_NAME: "{{ lookup('env', 'CONTAINER_BACKUP_NAME') }}"
+    my_date: "{{ lookup('env', 'MY_DATE') }}"
+    backup_file: "backup-{{ my_date }}.sql.gz.enc"
+    
+  tasks:
+
+  - name: Crear el directorio de backups si no existe
+    file:
+      path: "/var/backups/"
+      state: directory
+      mode: '0777'
+ 
+  - name: Dump y cifrar la base de datos PostgreSQL
+    shell: |
+      PGPASSWORD={{ db_password }}  pg_dump -U {{ db_user }} {{ db_name }} | gzip | openssl enc -aes-256-cbc -salt -out {{ backup_file }} -k "{{ encryption_key }}"
+    register: backup_result
+
+  - name: Verificar si el dump y cifrado fue exitoso
+    debug:
+      msg: "Backup creado correctamente en {{ backup_file }}"
+    when: backup_result.rc == 0
+
+  - name: Crear directorio local para backups si no existe
+    file:
+      path: "{{ local_backup_dir }}"
+      state: directory
+      mode: '0777'
+    delegate_to: localhost
+
+  - name: Copiar el archivo de backup a la máquina local
+    fetch:
+      src: "{{ backup_file }}"
+      dest: "{{ local_backup_dir }}/"
+      flat: true

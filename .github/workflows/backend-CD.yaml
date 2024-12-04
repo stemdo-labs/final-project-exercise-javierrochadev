@@ -1,0 +1,159 @@
+name: 'Backend CD'
+on:
+  workflow_call:
+    inputs:
+      image_name:
+        description: 'Name of the Docker image'
+        required: true
+        type: string
+      image_tag:
+        description: 'Tag for the Docker image'
+        required: true
+        type: string
+      chart_name:
+        description: 'Name of the Helm chart'
+        required: true
+        type: string
+      namespace:
+        description: 'Namespace '
+        required: true
+        type: string
+    secrets:
+      db_name:
+        description: 'The database name'
+        required: true
+      db_pass:
+        description: 'The database password'
+        required: true
+      db_port:
+        description: 'The database port'
+        required: true
+      db_user:
+        description: 'The database username'
+        required: true
+      db_host:
+        description: 'The database host'
+        required: true
+      acr_name:
+        description: 'Azure Container Registry name'
+        required: true
+      acr_password:
+        description: 'Azure Container Registry password'
+        required: true
+      acr_email:
+        description: 'Azure Container Registry email'
+        required: true
+      arm_client_id:
+        description: 'Azure Client ID'
+        required: true
+      arm_client_secret:
+        description: 'Azure Client Secret'
+        required: true
+      arm_tenant_id:
+        description: 'Azure Tenant ID'
+        required: true
+      arm_subscription_id:
+        description: 'Azure Tenant ID'
+        required: true
+      aks_resource_group:
+        description: 'Azure Resource Group of AKS'
+        required: true
+      aks_cluster_name:
+        description: 'Azure AKS Cluster Name'
+        required: true
+      acr_secret_name:
+        description: 'Kubernetes secret for ACR'
+        required: true
+      harbor_ip:
+        description: 'URL of the Harbor registry to download Helm'
+        required: true
+      harbor_username:
+        description: 'Username for Harbor'
+        required: true
+      harbor_password:
+        description: 'Password for Harbor'
+        required: true
+
+jobs:
+  deploy:
+    # runs-on: runner-stemdo-labs
+    runs-on: ubuntu-latest
+    steps:
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: '20'
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Azure CLI
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+        shell: bash
+
+      - name: Login to Azure with Service Principal
+        run: |
+          az login --service-principal \
+            -u ${{ secrets.arm_client_id }} \
+            -p ${{ secrets.arm_client_secret }} \
+            --tenant ${{ secrets.arm_tenant_id }}
+        shell: bash
+
+      - name: Install kubectl using the official script
+        run: |
+          curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+          kubectl version --client
+        shell: bash
+
+      - name: Install Helm
+        shell: bash
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+      - name: Install aks cli
+        shell: bash
+        run: |
+          sudo az aks install-cli
+  
+      - name: Get AKS credentials
+        run: |
+          az account set --subscription ${{ secrets.arm_subscription_id}}
+          az aks get-credentials --resource-group ${{ secrets.aks_resource_group }} --name ${{ secrets.aks_cluster_name }} --overwrite-existing
+          kubelogin convert-kubeconfig -l azurecli
+        shell: bash
+
+      - name: Log in to ACR
+        run: |
+          az acr login --name ${{ secrets.acr_name }}
+        shell: bash
+
+      - name: Helm Login
+        run: |
+          helm registry login ${{ secrets.harbor_ip }} --username ${{ secrets.harbor_username }} --password ${{ secrets.harbor_password }}
+        shell: bash
+
+      
+
+      - name: Create Docker registry secret in default namespace
+        run: |
+          if ! kubectl get secrets ${{ secrets.acr_secret_name }} -n ns-jrocha > /dev/null 2>&1; then
+            kubectl create secret docker-registry ${{ secrets.acr_secret_name}} \
+              --docker-server=${{ secrets.acr_name}}.azurecr.io \
+              --docker-username=${{ secrets.arm_client_id }} \
+              --docker-password=${{ secrets.arm_client_secret }} \
+              --namespace=ns-jrocha
+          fi 
+        shell: bash
+
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install ${{inputs.chart_name}} oci://${{secrets.harbor_ip}}/${{secrets.harbor_username}}/${{inputs.chart_name}} \
+            -f ./chart/custom_values.yaml \
+            --namespace ns-jrocha \
+            --set "database.SPRING_DB_HOST=${{ secrets.db_host }}" \
+            --set "database.SPRING_DB_NAME=${{ secrets.db_name }}" \
+            --set "database.SPRING_DB_USER=${{ secrets.db_user }}" \
+            --set "database.SPRING_DB_PASSWORD=${{ secrets.db_pass }}" \
+            --set "image.tag=${{ inputs.image_tag }}" \
+            --set "image.pullSecret=${{ secrets.acr_secret_name }}"
+        shell: bash

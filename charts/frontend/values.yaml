@@ -1,29 +1,39 @@
-# Default values for backend.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+# Valores por defecto para el backend.
+# Este es un archivo formateado en YAML.
+# Declara las variables que se pasarán a tus plantillas.
 
-# This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
-frontend:
+# Esto configurará el número de réplicas de los pods.
+# Más información sobre ReplicaSets se puede encontrar aquí: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+replicaCount: 1  # Número de pods que se desplegarán para esta aplicación
 
-  replicaCount: 2
-  image:
-    repository: "jrochadev/mi-nginx-vue-app"
-    tag: "latest"
-    pullSecret: ""
-  acr:
-    dockerconfigjson: ""
-  
-  autoscaling:
-    enabled: true
-    minReplicas: 2
-    maxReplicas: 10
-    targetCPUUtilizationPercentage: 60
-  probes:
-    readinessProbe:
-      httpGet:
-        path: /healthz                                                   
-        port: 80                                                  
-      initialDelaySeconds: 10                                                                 
-      periodSeconds: 5                                  
-      timeoutSeconds: 2                                        
-      failureThreshold: 3
+# Configuración de la imagen
+# Estos valores definen la imagen Docker que se usará para la aplicación backend
+image:
+  repository: "myacrcontainer.azuere.io/myimage"  # El repositorio de Docker (por ejemplo, "myrepo/myapp")
+  tag: "latest"         # La etiqueta de la imagen Docker (por ejemplo, "latest", "v1.0.0")
+  pullSecret: "mypullsecret"  # Opcional: Secreto de Kubernetes para obtener la imagen de un repositorio privado (por ejemplo, "my-secret")
+
+# Configuración de Azure Container Registry (ACR)
+# Esto se utiliza para autenticar y obtener imágenes del Registro de Contenedores de Azure
+acr:
+  dockerconfigjson: ""  # Secreto de Kubernetes que contiene las credenciales de ACR (usualmente en formato JSON)
+
+# Configuración de escalado automático para la aplicación backend
+# Esto habilita y configura el escalado horizontal de pods en función del uso de CPU
+autoscaling:
+   enabled: true  # Habilita o deshabilita el escalado automático (true/false)
+   minReplicas: 2  # Número mínimo de réplicas para la aplicación (en caso de bajo tráfico)
+   maxReplicas: 10  # Número máximo de réplicas para la aplicación (en caso de alto tráfico)
+   targetCPUUtilizationPercentage: 60  # El porcentaje de uso de CPU objetivo para escalar (por ejemplo, escalar si el uso supera el 60%)
+
+# Sondeos para comprobar la salud de la aplicación
+# El readinessProbe verifica si la aplicación está lista para recibir tráfico
+probes:
+  readinessProbe:
+    httpGet:
+      path: /healthz  # El endpoint HTTP que Kubernetes consultará para verificar si la aplicación está saludable
+      port: 80       # El puerto en el que está disponible el endpoint de salud
+    initialDelaySeconds: 10  # Tiempo de espera antes de hacer la primera comprobación de salud después de que el contenedor se inicie (en segundos)
+    periodSeconds: 5         # Intervalo entre cada comprobación de salud subsecuente (en segundos)
+    timeoutSeconds: 2        # Tiempo máximo para esperar la respuesta de la comprobación de salud (en segundos)
+    failureThreshold: 3      # Número de comprobaciones fallidas consecutivas antes de marcar el contenedor como no saludable

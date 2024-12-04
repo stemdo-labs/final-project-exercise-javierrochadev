@@ -1,37 +1,32 @@
+                                                                                         
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-frontend-deploy
-  namespace: {{ .Release.Namespace }}  
+  - name: "{{ .Release.Name }}-frontend-app"
+  - namespace: {{ .Release.Namespace }}
 spec:
-  replicas: {{ .Values.frontend.replicaCount }} 
+  replicas: 1
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-frontend-deploy
+      app: "{{ .Release.Name }}-frontend-app"
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-frontend-deploy
+        app: "{{ .Release.Name }}-frontend-app"
     spec:
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret }}
       containers:
-      - name: frontend-app
-        image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+      - name: "{{ .Release.Name }}-frontend-app"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         ports:
         - containerPort: 80
-        resources:
-          requests:
-            cpu: "100m"
-            memory: "128Mi"
-          limits:
-            cpu: "500m"
-            memory: "256Mi"
         readinessProbe:
           httpGet:
-            path: {{ .Values.frontend.probes.readinessProbe.httpGet.path }}
-            port: {{ .Values.frontend.probes.readinessProbe.httpGet.port }}
-          initialDelaySeconds: {{ .Values.frontend.probes.readinessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.frontend.probes.readinessProbe.periodSeconds }}
-          timeoutSeconds: {{ .Values.frontend.probes.readinessProbe.timeoutSeconds }}
-          failureThreshold: {{ .Values.frontend.probes.readinessProbe.failureThreshold }}
-#      imagePullSecrets:  # Configuración de pullSecret si está definido
-#        - name: {{ .Values.frontend.image.pullSecret | quote }}
+            path: /healthz
+            port: 80
+          initialDelaySeconds: {{ .Values.probes.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.probes.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.probes.readinessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.probes.readinessProbe.failureThreshold }}
+
