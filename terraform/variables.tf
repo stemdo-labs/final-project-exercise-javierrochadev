@@ -1,5 +1,4 @@
 
-
 variable "subnet_production_id" {
   description = "El id de la red virtual de el cluster"
   type        = string
@@ -10,14 +9,6 @@ variable "resource_group_name" {
   type        = string
   default     = "rg-jrocha-dvfinlab" 
 }
-
-variable "subnet_production_id" {
-  description = "El nombre del grupo de recursos de Azure"
-  type        = string
-  default     = "UK South"
-}
-
-
 
 variable "location" {
   description = "El nombre de la localizacion de los recursos de Azure"
