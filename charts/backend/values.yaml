@@ -8,7 +8,7 @@ replicaCount: 1  # Número de réplicas del backend (por ejemplo, 1 instancia de
 
 # Configuración de la imagen Docker que se utilizará para el contenedor de la aplicación
 image:
-  repository: "myacrcontainer.azure.io/myimage"  # El repositorio Docker donde se encuentra la imagen (por ejemplo, "myrepo/myapp")
+  repository: "myacrcontainer.azurecr.io/myimage"  # El repositorio Docker donde se encuentra la imagen (por ejemplo, "myrepo/myapp")
   tag: "latest"         # La etiqueta de la imagen Docker (por ejemplo, "latest" o una versión específica)
   pullSecret: "mypullsecret"  # Secreto de Kubernetes para acceder a repositorios privados de Docker
 
@@ -25,9 +25,9 @@ database:
 # Esto habilita y configura el escalado horizontal de pods basado en el uso de CPU
 autoscaling:
     enabled: true  # Habilita el escalado automático (true/false)
-    minReplicas: "1"  # Número mínimo de réplicas para la aplicación (cuando la carga es baja)
-    maxReplicas: "10"  # Número máximo de réplicas para la aplicación (cuando la carga es alta)
-    targetCPUUtilizationPercentage: "60"  # Porcentaje de utilización de CPU que desencadenará el escalado (por ejemplo, escalar si el uso de CPU supera el 60%)
+    minReplicas: 1  # Número mínimo de réplicas para la aplicación (cuando la carga es baja)
+    maxReplicas: 10  # Número máximo de réplicas para la aplicación (cuando la carga es alta)
+    targetCPUUtilizationPercentage: 60  # Porcentaje de utilización de CPU que desencadenará el escalado (por ejemplo, escalar si el uso de CPU supera el 60%)
 
 # Configuración de sondas (probes) para verificar la salud de la aplicación
 # La readinessProbe se usa para determinar si el contenedor está listo para recibir tráfico
