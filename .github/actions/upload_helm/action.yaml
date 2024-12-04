@@ -1,0 +1,65 @@
+name: 'Upload Helm Chart to Harbor'
+description: 'Package Helm chart and push it to Harbor'
+
+inputs:
+  harbor_username:
+    description: 'Username for Harbor'
+    required: true
+  harbor_password:
+    description: 'Password for Harbor'
+    required: true
+  harbor_ip:
+    description: 'IP address or domain of Harbor'
+    required: true
+  chart_directory:
+    description: 'Path to the chart directory'
+    required: true
+  chart_name:
+    description: 'Name of the Helm chart'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install Helm
+      shell: bash
+      run: |
+        curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+    - name: Login to Harbor
+      shell: bash
+      run: |
+        helm registry login ${{ inputs.harbor_ip }} --username ${{ inputs.harbor_username }} --password ${{ inputs.harbor_password }}
+    - name: Set up permissions
+      run: |
+        chmod +x upload_version.sh
+        chmod +x extract_version.sh
+      shell: bash
+
+    - id : extract_version 
+      name: Extract and increment version
+      run: |
+        NEW_VERSION=$(./extract_version.sh ${{ inputs.chart_name }}) 
+        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Upload version
+      run: |
+        ./upload_version.sh ${{ inputs.chart_name }} ${{steps.extract_version.outputs.NEW_VERSION}}
+      shell: bash
+
+    - name: Package Helm Chart
+      shell: bash
+      run: |
+        helm package ${{ inputs.chart_name }} --version ${{steps.extract_version.outputs.NEW_VERSION}}
+      working-directory: ${{ inputs.chart_directory }}
+
+    - name: Push Helm Chart to Harbor
+      shell: bash
+      run: |
+        helm push ${{inputs.chart_name}}-*.tgz oci://${{ inputs.harbor_ip }}/${{ inputs.harbor_username }}
+      working-directory: ${{ inputs.chart_directory }}

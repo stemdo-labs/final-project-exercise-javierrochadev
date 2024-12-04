@@ -1,33 +1,42 @@
-# Default values for backend.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+# Valores por defecto para el backend.
+# Este es un archivo formateado en YAML.
+# Declara las variables que se pasarán a tus plantillas.
 
-# This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
-backend:
-  
-  replicaCount: 1
-  image:
-    repository: "jrochadev/backend"
-    tag: "1.0"
-    pullSecret: ""
-  database:
-    SPRING_DB_HOST: ""
-    SPRING_DB_PORT: ""
-    SPRING_DB_NAME: ""
-    SPRING_DB_USER: ""
-    SPRING_DB_PASSWORD: ""
-  
-  autoscaling:
-    enabled: true
-    minReplicas: 1
-    maxReplicas: 10
-    targetCPUUtilizationPercentage: 60
-  probes:
-    readinessProbe:
-      httpGet:
-        path: /healthz
-        port: 8080
-      initialDelaySeconds: 10
-      periodSeconds: 5
-      timeoutSeconds: 2
-      failureThreshold: 3
+# Esto configurará el número de réplicas de los pods.
+# Más información sobre ReplicaSets se puede encontrar aquí: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+replicaCount: 1  # Número de réplicas del backend (por ejemplo, 1 instancia de pod)
+
+# Configuración de la imagen Docker que se utilizará para el contenedor de la aplicación
+image:
+  repository: ""  # El repositorio Docker donde se encuentra la imagen (por ejemplo, "myrepo/myapp")
+  tag: ""         # La etiqueta de la imagen Docker (por ejemplo, "latest" o una versión específica)
+  pullSecret: ""  # Secreto de Kubernetes para acceder a repositorios privados de Docker
+
+# Configuración de la base de datos que usa la aplicación backend
+# Estos parámetros son usados por la aplicación para conectarse a la base de datos
+database:
+  SPRING_DB_HOST: ""        # El host (dirección IP o nombre del servicio) de la base de datos
+  SPRING_DB_PORT: ""        # El puerto en el que la base de datos está disponible
+  SPRING_DB_NAME: ""        # El nombre de la base de datos a la que la aplicación se conectará
+  SPRING_DB_USER: ""        # El nombre de usuario para conectarse a la base de datos
+  SPRING_DB_PASSWORD: ""    # La contraseña para conectarse a la base de datos
+
+# Configuración de escalado automático para la aplicación backend
+# Esto habilita y configura el escalado horizontal de pods basado en el uso de CPU
+autoscaling:
+    enabled: true  # Habilita el escalado automático (true/false)
+    minReplicas: 1  # Número mínimo de réplicas para la aplicación (cuando la carga es baja)
+    maxReplicas: 10  # Número máximo de réplicas para la aplicación (cuando la carga es alta)
+    targetCPUUtilizationPercentage: 60  # Porcentaje de utilización de CPU que desencadenará el escalado (por ejemplo, escalar si el uso de CPU supera el 60%)
+
+# Configuración de sondas (probes) para verificar la salud de la aplicación
+# La readinessProbe se usa para determinar si el contenedor está listo para recibir tráfico
+probes:
+  readinessProbe:
+    httpGet:
+      path: /healthz        # El endpoint HTTP que Kubernetes consulta para verificar la salud de la aplicación
+      port: 8080            # El puerto en el que el endpoint de salud está disponible
+    initialDelaySeconds: 10  # Tiempo en segundos que Kubernetes esperará antes de hacer la primera comprobación de salud
+    periodSeconds: 5         # Intervalo en segundos entre cada comprobación de salud posterior
+    timeoutSeconds: 2        # Tiempo máximo que Kubernetes esperará para recibir una respuesta de la comprobación
+    failureThreshold: 3      # Número de fallos consecutivos permitidos antes de marcar el pod como no saludable
