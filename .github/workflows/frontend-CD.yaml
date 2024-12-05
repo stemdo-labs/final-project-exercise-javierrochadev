@@ -111,9 +111,7 @@ jobs:
 
       - name: Certificate adn private key TLS creation 
         run: |
-          echo "pass_test" > pass.txt
-          openssl genpkey -algorithm RSA -out tls.key -aes256 -pass file:pass.txt
-          openssl req -new -x509 -key tls.key -out tls.crt -days 365
+          sudo bash cert_creation.sh pass_test
         shell: bash
 
       - name: Create Docker registry secret
