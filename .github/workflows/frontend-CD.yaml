@@ -54,6 +54,22 @@ on:
         required: true
 
 jobs:
+  certificate_creation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Creation private key and certificate SSL 
+        run: |
+          openssl req -new -x509 -key tls.key -out tls.crt -days 365
+          openssl genpkey -algorithm RSA -out tls.key -aes256
+        shell: bash
+      
+      - name: Creation Secret
+        run: |
+          kubectl create secret tls frontend-tls-secret --cert=tls.crt --key=tls.key
+        shell: bash
+
+          
+          
   deploy:
     # runs-on: runner-stemdo-labs
     runs-on: ubuntu-latest
@@ -108,13 +124,27 @@ jobs:
           helm registry login ${{ secrets.harbor_ip }} --username ${{ secrets.harbor_username }} --password ${{ secrets.harbor_password }}
         shell: bash
 
-      - name: Create Docker registry secret in default namespace
+      - name: Certificate adn private key TLS creation 
+        run: |
+          openssl genpkey -algorithm RSA -out tls.key -aes256
+          openssl req -new -x509 -key tls.key -out tls.crt -days 365
+        shell: bash
+
+      - name: Create Docker registry secret
         run: |
           if ! kubectl get secrets ${{ secrets.acr_secret_name }} -n ns-jrocha > /dev/null 2>&1; then
             kubectl create secret docker-registry ${{ secrets.acr_secret_name}} \
               --docker-server=${{ secrets.acr_name}}.azurecr.io \
               --docker-username=${{ secrets.arm_client_id }} \
               --docker-password=${{ secrets.arm_client_secret }} \
+              --namespace=ns-jrocha
+          fi 
+        shell: bash
+      
+      - name: Create tls secret
+        run: |
+          if ! kubectl get secrets tls-secret -n ns-jrocha > /dev/null 2>&1; then
+            kubectl create secret tls tls-secret --cert=tls.crt --key=tls.key \
               --namespace=ns-jrocha
           fi 
         shell: bash

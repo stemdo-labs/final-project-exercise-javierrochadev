@@ -29,4 +29,12 @@ spec:
           periodSeconds: {{ .Values.probes.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.probes.readinessProbe.timeoutSeconds }}
           failureThreshold: {{ .Values.probes.readinessProbe.failureThreshold }}
+        volumeMounts:
+          - name: tls-secret-volume
+            mountPath: /etc/ssl/certs 
+            readOnly: true  
+  volumes:
+  - name: tls-secret-volume
+    secret:
+      secretName: tls-secret  
 
