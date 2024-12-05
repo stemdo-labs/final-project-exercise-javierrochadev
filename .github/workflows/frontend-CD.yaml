@@ -54,22 +54,7 @@ on:
         required: true
 
 jobs:
-  certificate_creation:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Creation private key and certificate SSL 
-        run: |
-          openssl req -new -x509 -key tls.key -out tls.crt -days 365
-          openssl genpkey -algorithm RSA -out tls.key -aes256
-        shell: bash
-      
-      - name: Creation Secret
-        run: |
-          kubectl create secret tls frontend-tls-secret --cert=tls.crt --key=tls.key
-        shell: bash
-
-          
-          
+  
   deploy:
     # runs-on: runner-stemdo-labs
     runs-on: ubuntu-latest
