@@ -8,8 +8,8 @@ on:
         required: true
         type: choice
         options:
-          - backend
-          - frontend
+          - backend-app
+          - frontend-app
 
 jobs:
   package-and-push:
