@@ -111,7 +111,7 @@ jobs:
 
       - name: Certificate adn private key TLS creation 
         run: |
-          openssl genpkey -algorithm RSA -out tls.key -aes256
+          openssl genpkey -algorithm RSA -out tls.key -aes256 -pass pass:pass_test
           openssl req -new -x509 -key tls.key -out tls.crt -days 365
         shell: bash
 
