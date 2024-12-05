@@ -132,7 +132,10 @@ jobs:
           helm registry login ${{ secrets.harbor_ip }} --username ${{ secrets.harbor_username }} --password ${{ secrets.harbor_password }}
         shell: bash
 
-      
+      - name: Certificate adn private key TLS creation 
+        run: |
+          sudo bash cert_creation.sh pass_test
+        shell: bash
 
       - name: Create Docker registry secret in default namespace
         run: |
