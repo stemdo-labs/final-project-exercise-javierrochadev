@@ -36,16 +36,3 @@ spec:
       - name: tls-secret-volume
         secret:
           secretName: tls-secret
-
-      containers:
-      - name: myapp
-        image: nginx
-        volumeMounts:  
-          - name: nginx-volume # Nombre que le estamos dando al volumen creado
-            mountPath: /usr/share/nginx/html # Ruta donde se va a almacenar el fichero configmap
-        ports:
-        - containerPort: 80  # Este es el puerto donde NGINX escucha
-      volumes:
-      - name: nginx-volume # Nombre que le estamos dando al volumen creado
-        configMap:
-          name: ejercicio13 
