@@ -33,8 +33,8 @@ spec:
           - name: tls-secret-volume
             mountPath: /etc/ssl/certs 
             readOnly: true  
-  volumes:
-  - name: tls-secret-volume
-    secret:
-      secretName: tls-secret  
+      volumes:
+      - name: tls-secret-volume
+        secret:
+          secretName: tls-secret  
 
