@@ -1,9 +1,8 @@
-                                                                                         
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  - name: "{{ .Release.Name }}-frontend-app"
-  - namespace: {{ .Release.Namespace }}
+  name: "{{ .Release.Name }}-frontend-app"
+  namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
@@ -31,10 +30,9 @@ spec:
           failureThreshold: {{ .Values.probes.readinessProbe.failureThreshold }}
         volumeMounts:
           - name: tls-secret-volume
-            mountPath: /etc/ssl/certs 
+            mountPath: /etc/ssl/certs
             readOnly: true  
-      volumes:
+      volumes:  # Este bloque debe estar a nivel del spec, fuera de los containers
       - name: tls-secret-volume
         secret:
-          secretName: tls-secret  
-
+          secretName: tls-secret
