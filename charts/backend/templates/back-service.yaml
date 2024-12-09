@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-service
+  name: "{{ .Values.nameOverride }}-{{ .Release.Name }}-backend-service"
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
