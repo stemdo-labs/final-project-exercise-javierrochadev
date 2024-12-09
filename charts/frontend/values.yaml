@@ -5,7 +5,7 @@
 # Esto configurará el número de réplicas de los pods.
 # Más información sobre ReplicaSets se puede encontrar aquí: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 replicaCount: 1  # Número de pods que se desplegarán para esta aplicación
-
+nameOverride: ""
 ingress:
   enabled: true
   # Nombre del host o dominio para acceder a la aplicación

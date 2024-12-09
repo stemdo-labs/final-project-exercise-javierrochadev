@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
-    app: "{{ .Release.Name }}-backend-app"  
+    app: "{{ .Values.nameOverride }}{{ .Release.Name }}-backend-app"  
   ports:
     - protocol: TCP
       port: 8080   
