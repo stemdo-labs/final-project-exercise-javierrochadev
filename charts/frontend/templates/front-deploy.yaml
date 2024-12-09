@@ -2,7 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: "{{ .Release.Name }}-frontend-app"
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace }}  
+  # HAY QUE PONER AQUI EL ANOTATIONS QUE SE CREA POR DEFECTO Y DARLE UN NOMBE APARTE DE EL QUE DA POR DEFECTO, COGE EL NOMBRE DE LA RELEASE, HAY QUE PONERSELE OTRA VEZ POR EJEMPLO PARA QUE NO SE SOLAPE
+  annotations:
+    meta.helm.sh/release-name: {{ .Release.Name }}
 spec:
   replicas: 1
   selector:
