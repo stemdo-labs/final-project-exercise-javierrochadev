@@ -22,5 +22,4 @@ spec:
               name: "{{ .Values.nameOverride}}-{{ .Release.Name }}-frontend-service"
               port:
                 number: {{ .Values.ingress.servicePort | default 80 }}
-          {{- end }}
 {{- end }}
