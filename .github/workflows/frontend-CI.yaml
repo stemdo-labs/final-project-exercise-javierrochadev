@@ -11,6 +11,14 @@ on:
        required: false
        type: string
        default: "latest"
+    release_env:
+        description: 'Name of the Release env to deploy'
+        required: true
+        type: string
+    release_name:
+        description: 'Name of the Release chart to deploy'
+        required: true
+        type: string
     secrets:
      acr_name:
        description: "Azure Container Registry name"
@@ -54,6 +62,12 @@ jobs:
         run: |
           az acr login --name ${{ secrets.acr_name }}
         shell: bash
+
+      - name: Set backend service name value on nginx.conf
+        run: |
+          sudo bash ./set_server.sh http://${{ inputs.release_env }}-${{ inputs.release_name }}-backend-service:8080
+        shell: bash
+        
       - name: Build Docker Image
         run: |
           docker build -t ${{ secrets.acr_name }}.azurecr.io/${{ inputs.image_name }}:${{ inputs.image_tag }} .
