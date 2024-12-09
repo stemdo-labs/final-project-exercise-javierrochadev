@@ -9,7 +9,7 @@ nameOverride: ""
 ingress:
   enabled: true
   # Nombre del host o dominio para acceder a la aplicación
-  host: "frontend-service"
+  host: ""
   # Las rutas adicionales que deben ser direccionadas al frontend
   paths:
     - /
