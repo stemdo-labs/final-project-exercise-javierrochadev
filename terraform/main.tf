@@ -6,11 +6,9 @@ terraform {
     key                   = "terraform.tfstate"           
   }
 }
-
 provider "azurerm" {
   features {}
 }
-
 
 # module "vnet" {
 #   source              = "./modules/vnet"
