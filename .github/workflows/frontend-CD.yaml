@@ -14,6 +14,10 @@ on:
         description: 'Name of the Helm chart'
         required: true
         type: string
+      release_name:
+        description: 'Name of the Release chart to deploy'
+        required: true
+        type: string
       namespace:
         description: 'Namespace'
         required: true
@@ -135,7 +139,7 @@ jobs:
 
       - name: Deploy with Helm
         run: |
-          helm upgrade --install ${{inputs.chart_name}} oci://${{secrets.harbor_ip}}/${{secrets.harbor_username}}/${{inputs.chart_name}} \
+          helm upgrade --install ${{inputs.release_name}} oci://${{secrets.harbor_ip}}/${{secrets.harbor_username}}/${{inputs.chart_name}} \
             -f ./chart/custom_values.yaml \
             --namespace ns-jrocha \
             --set "image.tag=${{ inputs.image_tag }}" \
