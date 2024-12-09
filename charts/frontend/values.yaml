@@ -18,7 +18,7 @@ ingress:
 # Configuración de la imagen
 # Estos valores definen la imagen Docker que se usará para la aplicación backend
 image:
-  repository: "myacrcontainer.azuere.io/myimage"  # El repositorio de Docker (por ejemplo, "myrepo/myapp")
+  repository: "myacrcontainer.azurecr.io/myimage"  # El repositorio de Docker (por ejemplo, "myrepo/myapp")
   tag: "latest"         # La etiqueta de la imagen Docker (por ejemplo, "latest", "v1.0.0")
   pullSecret: "mypullsecret"  # Opcional: Secreto de Kubernetes para obtener la imagen de un repositorio privado (por ejemplo, "my-secret")
 
