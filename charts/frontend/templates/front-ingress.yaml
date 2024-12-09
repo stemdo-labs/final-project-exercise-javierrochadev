@@ -12,16 +12,15 @@ metadata:
     app: "{{ .Values.nameOverride }}-{{ .Release.Name }}-frontend-app"
 spec:
   rules:
-    - host: "{{ .Release.Name}}-{{ .Values.ingress.host }}"
+    - host: "{{ .Values.ingress.host }}"
       http:
         paths:
-          {{- range .Values.ingress.paths }}
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: "{{ .Values.nameOverride }}-{{ .Release.Name }}-frontend-service"
-                port:
-                  number: 80
+        - path: "/"
+          pathType: Prefix
+          backend:
+            service:
+              name: "{{ .Values.nameOverride}}-{{ .Release.Name }}-frontend-service"
+              port:
+                number: {{ .Values.ingress.servicePort | default 80 }}
           {{- end }}
 {{- end }}
