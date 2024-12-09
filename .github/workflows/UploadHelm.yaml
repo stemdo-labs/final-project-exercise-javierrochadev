@@ -13,7 +13,9 @@ on:
 
 jobs:
   package-and-push:
-    runs-on: runner-stemdo-labs
+    # runs-on: runner-stemdo-labs
+    runs-on: ubuntu-latest
+
 
     steps:
     - name: Set up Node.js
