@@ -18,10 +18,6 @@ on:
         description: 'Name of the Release chart to deploy'
         required: true
         type: string
-      release_name:
-        description: 'Name of the Release chart to deploy'
-        required: true
-        type: string
       namespace:
         description: 'Namespace'
         required: true
@@ -121,12 +117,6 @@ jobs:
         run: |
           sudo bash cert_creation.sh pass_test
         shell: bash
-
-      - name: Set backend service name value on nginx.conf
-        run: |
-          sudo bash ./set_server.sh http://${{ inputs.release_env }}-${{ inputs.release_name }}-backend-service:8080
-        shell: bash
-
 
       - name: Create Docker registry secret
         run: |
