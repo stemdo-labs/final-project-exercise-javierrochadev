@@ -22,27 +22,27 @@ spec:
           - name: SPRING_DB_HOST
             valueFrom:
               configMapKeyRef:
-                name: "{{ .Values.nameOverride }}-{{ .Release.Name }}-backend-config"
+                name: "{{ .Values.nameOverride }}-{{ .Release.Name }}-config"
                 key: SPRING_DB_HOST
           - name: SPRING_DB_PORT
             valueFrom:
               configMapKeyRef:
-                name: "{{ .Values.nameOverride }}-{{ .Release.Name }}-backend-config"
+                name: "{{ .Values.nameOverride }}-{{ .Release.Name }}-config"
                 key: SPRING_DB_PORT
           - name: SPRING_DB_NAME
             valueFrom:
               configMapKeyRef:
-                name: "{{ .Values.nameOverride }}-{{ .Release.Name }}-backend-config"
+                name: "{{ .Values.nameOverride }}-{{ .Release.Name }}-config"
                 key: SPRING_DB_NAME
           - name: SPRING_DB_USER
             valueFrom:
               configMapKeyRef:
-                name: "{{ .Values.nameOverride }}-{{ .Release.Name }}-backend-config"
+                name: "{{ .Values.nameOverride }}-{{ .Release.Name }}-config"
                 key: SPRING_DB_USER
           - name: SPRING_DB_PASSWORD
             valueFrom:
               configMapKeyRef:
-                name: "{{ .Values.nameOverride }}-{{ .Release.Name }}-backend-config"
+                name: "{{ .Values.nameOverride }}-{{ .Release.Name }}-config"
                 key: SPRING_DB_PASSWORD
         ports:
           - containerPort: 8080  # Puerto que escucha tu backend
