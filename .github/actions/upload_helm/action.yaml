@@ -80,7 +80,7 @@ runs:
 
     - name: Upload version
       run: |
-        ./upload_version.sh ${{ inputs.chart_name }} ${{steps.extract_version.outputs.NEW_VERSION}}
+        ./upload_version.sh oci://${{ inputs.chart_name }} ${{steps.extract_version.outputs.NEW_VERSION}}
       shell: bash
 
     - name: Package Helm Chart
