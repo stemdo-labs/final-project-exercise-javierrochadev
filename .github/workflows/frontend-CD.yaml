@@ -108,10 +108,10 @@ jobs:
           kubelogin convert-kubeconfig -l azurecli
         shell: bash
       
-      - name: Helm Login
-        run: |
-          helm registry login ${{ secrets.harbor_ip }} --username ${{ secrets.harbor_username }} --password ${{ secrets.harbor_password }}
-        shell: bash
+      # - name: Helm Login
+      #   run: |
+      #     helm registry login ${{ secrets.harbor_ip }} --username ${{ secrets.harbor_username }} --password ${{ secrets.harbor_password }}
+      #   shell: bash
 
       - name: Certificate adn private key TLS creation 
         run: |
