@@ -154,7 +154,11 @@ jobs:
 
       - name: Deploy with Helm
         run: |
+<<<<<<< HEAD
           helm upgrade --install "${{ inputs.release_env}}-${{inputs.chart_name}}" oci://${{ inputs.release_env }}-${{ secrets.acr_name }}.azurecr.io/${{ inputs.chart_name }}  \
+=======
+          helm upgrade --install "${{ inputs.release_env}}-${{inputs.chart_name}}" oci://${{ secrets.acr_name }}.azurecr.io/${{ inputs.release_env }}-${{ inputs.chart_name }}  \
+>>>>>>> 11e6cd69d364effe1e4ddf1bcbd39aa69c8e317c
             -f ./chart/custom_values.yaml \
             --namespace ns-jrocha \
             --set "nameOverride=${{ inputs.release_env }}" \
