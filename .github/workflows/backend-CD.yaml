@@ -131,10 +131,10 @@ jobs:
           az acr login --name ${{ secrets.acr_name }}
         shell: bash
 
-      - name: Helm Login
-        run: |
-          helm registry login ${{ secrets.harbor_ip }} --username ${{ secrets.harbor_username }} --password ${{ secrets.harbor_password }}
-        shell: bash
+      # - name: Helm Login
+      #   run: |
+      #     helm registry login ${{ secrets.harbor_ip }} --username ${{ secrets.harbor_username }} --password ${{ secrets.harbor_password }}
+      #   shell: bash
 
       - name: Certificate adn private key TLS creation 
         run: |
@@ -152,9 +152,23 @@ jobs:
           fi 
         shell: bash
 
+      # - name: Deploy with Helm
+      #   run: |
+      #     helm upgrade --install "${{ inputs.release_env}}-${{inputs.chart_name}}" oci://${{secrets.harbor_ip}}/${{secrets.harbor_username}}/${{inputs.chart_name}} \
+      #       -f ./chart/custom_values.yaml \
+      #       --namespace ns-jrocha \
+      #       --set "nameOverride=${{ inputs.release_env }}" \
+      #       --set "database.SPRING_DB_HOST=${{ secrets.db_host }}" \
+      #       --set "database.SPRING_DB_NAME=${{ secrets.db_name }}" \
+      #       --set "database.SPRING_DB_USER=${{ secrets.db_user }}" \
+      #       --set "database.SPRING_DB_PASSWORD=${{ secrets.db_pass }}" \
+      #       --set "image.tag=${{ inputs.image_tag }}" \
+      #       --set "image.pullSecret=${{ secrets.acr_secret_name }}"
+      #   shell: bash
+      
       - name: Deploy with Helm
         run: |
-          helm upgrade --install "${{ inputs.release_env}}-${{inputs.chart_name}}" oci://${{secrets.harbor_ip}}/${{secrets.harbor_username}}/${{inputs.chart_name}} \
+          helm upgrade --install "${{ inputs.release_env}}-${{inputs.chart_name}}" ${{ secrets.acr_name }}.azurecr.io/${{ inputs.chart_name }} \
             -f ./chart/custom_values.yaml \
             --namespace ns-jrocha \
             --set "nameOverride=${{ inputs.release_env }}" \
