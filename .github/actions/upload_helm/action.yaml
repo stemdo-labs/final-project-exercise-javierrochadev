@@ -80,7 +80,7 @@ runs:
 
     - name: Upload version
       run: |
-        ./upload_version.sh oci://${{ inputs.chart_name }} ${{steps.extract_version.outputs.NEW_VERSION}}
+        ./upload_version.sh ${{ inputs.chart_name }} ${{steps.extract_version.outputs.NEW_VERSION}}
       shell: bash
 
     - name: Package Helm Chart
@@ -98,6 +98,6 @@ runs:
     - name: Push Helm Chart to ACR
       shell: bash
       run: |
-        helm push ${{inputs.chart_name}}-*.tgz  ${{ inputs.acr_name }}.azurecr.io/${{ inputs.chart_name }}
+        helm push ${{inputs.chart_name}}-*.tgz  oci://${{ inputs.acr_name }}.azurecr.io/${{ inputs.chart_name }}
       working-directory: ${{ inputs.chart_directory }}
 
