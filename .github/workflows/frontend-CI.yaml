@@ -65,7 +65,7 @@ jobs:
 
       - name: Set backend service name value on nginx.conf
         run: |
-          sudo bash ./set_server.sh http://${{ inputs.release_env }}-backend-backend-service:8080
+          sudo bash ./set_server.sh http://${{ inputs.release_env }}-backend-service:8080
         shell: bash
 
       - name: Build Docker Image
