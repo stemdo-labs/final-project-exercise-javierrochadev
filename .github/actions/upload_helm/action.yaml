@@ -98,6 +98,6 @@ runs:
     - name: Push Helm Chart to ACR
       shell: bash
       run: |
-        helm push ${{inputs.chart_name}}-*.tgz  oci://${{ inputs.acr_name }}.azurecr.io/${{ inputs.chart_name }} 
+        helm push ${{inputs.chart_name}}-*.tgz  oci://${{ inputs.acr_name }}.azurecr.io/
       working-directory: ${{ inputs.chart_directory }}
 
