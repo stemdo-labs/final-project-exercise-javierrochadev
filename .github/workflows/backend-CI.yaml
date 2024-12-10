@@ -11,6 +11,14 @@ on:
         required: false
         type: string
         default: "latest"
+      release_env:
+        description: "Release env value"
+        required: false
+        type: string
+      release_name:
+          description: 'Name of the Release chart to deploy'
+          required: true
+          type: string
     secrets:
       acr_name:
         description: "Azure Container Registry name"
