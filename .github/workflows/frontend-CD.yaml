@@ -108,6 +108,11 @@ jobs:
           kubelogin convert-kubeconfig -l azurecli
         shell: bash
       
+      - name: Log in to ACR
+        run: |
+          az acr login --name ${{ secrets.acr_name }}
+        shell: bash
+      
       # - name: Helm Login
       #   run: |
       #     helm registry login ${{ secrets.harbor_ip }} --username ${{ secrets.harbor_username }} --password ${{ secrets.harbor_password }}
