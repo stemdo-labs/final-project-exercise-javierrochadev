@@ -70,10 +70,10 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.acr_name }}.azurecr.io/${{ inputs.image_name }}:${{ inputs.image_tag }} .
+          docker build -t ${{ secrets.acr_name }}.azurecr.io/${{ inputs.release_env }}-${{ inputs.image_name }}:${{ inputs.image_tag }} .
         shell: bash
       - name: Push Docker Image
         run: |
-          docker push ${{ secrets.acr_name }}.azurecr.io/${{ inputs.image_name }}:${{ inputs.image_tag }}
+          docker push ${{ secrets.acr_name }}.azurecr.io/${{ inputs.release_env }}-${{ inputs.image_name }}:${{ inputs.image_tag }}
         shell: bash
         
