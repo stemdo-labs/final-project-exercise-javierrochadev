@@ -16,7 +16,7 @@ jobs:
     # runs-on: runner-stemdo-labs
     runs-on: ubuntu-latest
     env:
-     ARC_NAME: ${{ secrets.ACR_NAME }}
+     ACR_NAME: ${{ secrets.ACR_NAME }}
      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
