@@ -34,6 +34,11 @@ jobs:
         harbor_username: ${{ secrets.HARBOR_USER }}
         harbor_password: ${{ secrets.HARBOR_PASS }}
         harbor_ip: ${{ secrets.HARBOR_IP }}
+        acr_name: ${{ secrets.ACR_NAME }}
+        arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
+        arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
+        arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
+        arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
 
     # - name: Commit and Push Changes
     #   uses: EndBug/add-and-commit@v9
