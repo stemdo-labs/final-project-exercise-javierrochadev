@@ -159,7 +159,7 @@ jobs:
             --namespace ns-jrocha \
             --set "nameOverride=${{ inputs.release_env }}" \
             --set "image.tag=${{ inputs.image_tag }}" \
-            --set "image.repository="${{ secrets.acr_name }}.azurecr.io/${{ inputs.release_env }}-${{ inputs.image_name }}" \
+            --set "image.repository=${{ secrets.acr_name }}.azurecr.io/${{ inputs.release_env }}-${{ inputs.image_name }}" \
             --set "image.pullSecret=${{ secrets.acr_secret_name }}"
         shell: bash
           
