@@ -17,6 +17,18 @@ inputs:
   chart_name:
     description: 'Name of the Helm chart'
     required: true
+  acr_name:
+    description: "Azure Container Registry name"
+    required: true
+  arm_tenant_id:
+    description: "Azure Tenant ID"
+    required: true
+  arm_client_id:
+    description: "Azure Client ID"
+    required: true
+  arm_client_secret:
+    description: "Azure Client Secret"
+    required: true
 
 runs:
   using: 'composite'
@@ -29,10 +41,29 @@ runs:
       run: |
         curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
-    - name: Login to Harbor
-      shell: bash
+    - name: Install Azure CLI
       run: |
-        helm registry login ${{ inputs.harbor_ip }} --username ${{ inputs.harbor_username }} --password ${{ inputs.harbor_password }}
+        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+      shell: bash
+    
+    - name: Login to Azure with Service Principal
+      run: |
+        az login --service-principal \
+          -u ${{ secrets.arm_client_id }} \
+          -p ${{ secrets.arm_client_secret }} \
+          --tenant ${{ secrets.arm_tenant_id }}
+      shell: bash
+
+    - name: Log in to ACR
+      run: |
+        az acr login --name ${{ secrets.acr_name }}
+      shell: bash
+
+    # - name: Login to Harbor
+    #   shell: bash
+    #   run: |
+    #     helm registry login ${{ inputs.harbor_ip }} --username ${{ inputs.harbor_username }} --password ${{ inputs.harbor_password }}
+    
     - name: Set up permissions
       run: |
         chmod +x upload_version.sh
@@ -58,8 +89,15 @@ runs:
         helm package ${{ inputs.chart_name }} --version ${{steps.extract_version.outputs.NEW_VERSION}}
       working-directory: ${{ inputs.chart_directory }}
 
-    - name: Push Helm Chart to Harbor
+    # - name: Push Helm Chart to Harbor
+    #   shell: bash
+    #   run: |
+    #     helm push ${{inputs.chart_name}}-*.tgz oci://${{ inputs.harbor_ip }}/${{ inputs.harbor_username }}
+    #   working-directory: ${{ inputs.chart_directory }}
+
+    - name: Push Helm Chart to ACR
       shell: bash
       run: |
-        helm push ${{inputs.chart_name}}-*.tgz oci://${{ inputs.harbor_ip }}/${{ inputs.harbor_username }}
+        helm push ${{inputs.chart_name}}-*.tgz  ${{ secrets.acr_name }}.azurecr.io/${{ inputs.chart_name }}
       working-directory: ${{ inputs.chart_directory }}
+
