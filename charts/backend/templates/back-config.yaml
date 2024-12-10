@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: "{{ .Values.nameOverride }}-{{ .Release.Name }}-config"
+  name: "{{ .Release.Name }}-config"
   namespace: {{ .Release.Namespace }}
 data:
   SPRING_DB_HOST: "{{ .Values.database.SPRING_DB_HOST }}"

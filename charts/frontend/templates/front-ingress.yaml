@@ -4,12 +4,12 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: "{{ .Values.nameOverride }}-{{ .Release.Name }}-ingress"
+  name: "{{ .Release.Name }}-ingress"
   namespace: {{ .Release.Namespace}}
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: {{ .Values.ingress.annotations.path }}
   labels:
-    app: "{{ .Values.nameOverride }}-{{ .Release.Name }}-app"
+    app: "{{ .Release.Name }}-app"
 spec:
   rules:
     - host: "{{ .Values.ingress.host }}"

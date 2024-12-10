@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: "{{ .Values.nameOverride }}-{{ .Release.Name }}-service"
+  name: "{{ .Release.Name }}-service"
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
-    app: "{{ .Values.nameOverride }}{{ .Release.Name }}-app"  
+    app: "{{ .Release.Name }}-app"  
   ports:
     - protocol: TCP
       port: 8080   
