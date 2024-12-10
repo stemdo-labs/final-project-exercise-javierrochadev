@@ -49,14 +49,14 @@ runs:
     - name: Login to Azure with Service Principal
       run: |
         az login --service-principal \
-          -u ${{ secrets.arm_client_id }} \
-          -p ${{ secrets.arm_client_secret }} \
-          --tenant ${{ secrets.arm_tenant_id }}
+          -u ${{ inputs.arm_client_id }} \
+          -p ${{ inputs.arm_client_secret }} \
+          --tenant ${{ inputs.arm_tenant_id }}
       shell: bash
 
     - name: Log in to ACR
       run: |
-        az acr login --name ${{ secrets.acr_name }}
+        az acr login --name ${{ inputs.acr_name }}
       shell: bash
 
     # - name: Login to Harbor
@@ -98,6 +98,6 @@ runs:
     - name: Push Helm Chart to ACR
       shell: bash
       run: |
-        helm push ${{inputs.chart_name}}-*.tgz  ${{ secrets.acr_name }}.azurecr.io/${{ inputs.chart_name }}
+        helm push ${{inputs.chart_name}}-*.tgz  ${{ inputs.acr_name }}.azurecr.io/${{ inputs.chart_name }}
       working-directory: ${{ inputs.chart_directory }}
 
